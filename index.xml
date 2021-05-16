@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="0e24d9f099a06c225ebcd7e85872ee84520b1629">
+<index version="1" name="tRoshan Scripts" commit="735ed68c1b1856c79663cca48bdcd14af629f4fd">
   <category name="ReaScripts">
-    <reapack name="tRoshan_Copy Fx Parameters from last focused FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
-      <version name="1.0" author="tRoshan" time="2021-05-16T03:28:51Z">
-        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/0e24d9f099a06c225ebcd7e85872ee84520b1629/ReaScripts/tRoshan_Copy%20Fx%20Parameters%20from%20last%20focused%20FX.lua</source>
+    <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
+      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
       </version>
     </reapack>
-    <reapack name="tRoshan_Paste Fx Parameters from last focused FX.lua" type="script" desc="Paste Fx Paramters of the last focused FX to the clipboard">
-      <version name="1.0" author="tRoshan" time="2021-05-16T03:28:51Z">
-        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/0e24d9f099a06c225ebcd7e85872ee84520b1629/ReaScripts/tRoshan_Paste%20Fx%20Parameters%20from%20last%20focused%20FX.lua</source>
+    <reapack name="tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Paste Fx Paramters of the last focused FX to the clipboard">
+      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
       </version>
     </reapack>
   </category>
