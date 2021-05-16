@@ -1,3 +1,7 @@
+-- @description Paste Fx Paramters of the last focused FX to the clipboard
+-- @author tRoshan
+-- @version 1.0
+
 local EXT_SECTION = "tRoshan_copy_paste_fx_params"
 
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
