@@ -1,5 +1,5 @@
 -- @description Copy Fx Paramters of the last focused FX to the clipboard
--- @author cfillion
+-- @author tRoshan
 -- @version 1.0
 
 local EXT_SECTION = "tRoshan_copy_paste_fx_params"
