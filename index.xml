@@ -16,6 +16,10 @@
         <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/3caa6e14be4bf37acc4069a488f72c31507407d6/ReaScripts/tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua</source>
       </version>
     </reapack>
-
+    <reapack name="tRoshan_Create_Folder_From_Selected_Tracks.lua" type="script" desc="Create Folder From Selected Tracks">
+      <version name="1.0.0" author="tRoshan">
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/d5bea7f7479665f8773bdb30a1582ef8d9da2e86/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
+      </version>
+    </reapack>
   </category>
 </index>
