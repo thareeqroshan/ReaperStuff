@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <index version="1" name="tRoshan Scripts" commit="735ed68c1b1856c79663cca48bdcd14af629f4fd">
-  <category name="Mixing">
+  <category name="Reascripts">
     <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
       <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
