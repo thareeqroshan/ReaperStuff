@@ -21,5 +21,15 @@
         <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/d5bea7f7479665f8773bdb30a1582ef8d9da2e86/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
       </version>
     </reapack>
+    <reapack name="tRoshan Pan item 10 units to the left and show take pan envelope.lua" type="script" desc="Move Pan envelope to the left by 10%">
+      <version name="1.0.0" author="tRoshan">
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/9813d9cf78525a70db0a87a1599116075fa25e40/ReaScripts/tRoshan%20Pan%20item%2010%20units%20to%20the%20left%20and%20show%20take%20pan%20envelope.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan Pan item 10 units to the right and show take pan envelope.lua" type="script" desc="Move Pan envelope to the right by 10%">
+      <version name="1.0.0" author="tRoshan">
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/9813d9cf78525a70db0a87a1599116075fa25e40/ReaScripts/tRoshan%20Pan%20item%2010%20units%20to%20the%20right%20and%20show%20take%20pan%20envelope.lua</source>
+      </version>
+    </reapack>
   </category>
 </index>
