@@ -4,6 +4,7 @@ import os, os.path
 from reathon.nodes import *
 import tkinter as tk
 from tkinter import filedialog
+from utils import reaper_utils as ru
 
 def create_project(sender, app_data):
 
@@ -12,16 +13,14 @@ def create_project(sender, app_data):
         num_variations = dpg.get_value(num_variations_id)
 
         data = []
-        region_seperation = 5
-        time = 10
-        region_count = 1
 
         for i in range(0,len(list_of_sounds)):
             list_of_sounds[i] = dpg.get_value("sound"+str(i+1))
             variation = dpg.get_value("variation"+str(i+1))
             duration = dpg.get_value("duration"+str(i+1))
             tracks_num = dpg.get_value("tracksnum" + str(i+1))
-            data.append([list_of_sounds[i], variation, duration,tracks_num])
+            color = ru.random_rgb_color()
+            data.append([list_of_sounds[i], variation, duration,tracks_num + 1, color])
         print(data)
 
         print(f'Creating {asset_name} project with {num_variations} variations')
@@ -30,37 +29,10 @@ def create_project(sender, app_data):
         if not os.path.isdir(folderPath):
             os.mkdir(folderPath)
         project = Project()
-        for sound in data:
-            sound[3] +=1
-            for num in range(1,sound[3] + 1):
-                track_name =  sound[0] if num ==1 else sound[0] + str(num - 1)
-                track = Track()
-                
-                if sound[3] ==1:
-                    props = [
-                        ["NAME", sound[0]]
-                    ]
-                elif num == 1 :
-                    props = [
-                        ["NAME", sound[0]],
-                        ["ISBUS", [1, 1]]
-                    ]
-                elif num ==sound[3]:
-                    props = [
-                        ["NAME", track_name],
-                        ["ISBUS", [2, -1]]
-                    ]
-                else:
-                    props = [
-                        ["NAME", track_name]
-                    ]
-                track.props = props
-                project.add(track)
-                
-            for i in range(1,sound[1]+1):
-                project.add_region(region_count, time, time + sound[2], sound[0] + str(i))
-                time = time + sound[2] + region_seperation
-                region_count +=1
+
+        ru.create_tracks(project, data)
+        ru.create_regions(project, data)
+
         projectPath = os.path.join(folderPath,(asset_name + ".rpp"))
         project.write(projectPath)
 
@@ -74,8 +46,7 @@ def root_folder_picker(sender, data):
 def change_type_sound():
     dpg.set_item_label(asset_name_id, "Name of the "+ dpg.get_value(type_of_sound_id))
 
-def rgb_to_long_int(r, g, b):
-    return (r + g * 256 + b * 256 * 256)
+
 
 list_of_sounds = ["sound1"]
 
