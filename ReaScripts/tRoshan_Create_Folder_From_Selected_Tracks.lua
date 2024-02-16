@@ -1,13 +1,26 @@
-function Msg(value)
-  if console then
-    reaper.ShowConsoleMsg(tostring(value) .. "\n")
-  end
+--[[
+ * ReaScript Name: Create Folder From Selected Tracks
+ * Author: tRoshan
+ * Licence: GPL v3
+ * REAPER: 7.0
+ * Extensions: None
+ * Version: 1.0
+--]] --[[
+ * Changelog:
+ * v1.0 (2024-02-16)
+ 	+ Initial Release
+--]] function Msg(value)
+    if console then
+        reaper.ShowConsoleMsg(tostring(value) .. "\n")
+    end
 end
 
 function tablelength(T)
-  local count = 0
-  for _ in pairs(T) do count = count + 1 end
-  return count
+    local count = 0
+    for _ in pairs(T) do
+        count = count + 1
+    end
+    return count
 end
 
 reaper.Undo_BeginBlock()
@@ -16,7 +29,7 @@ reaper.Undo_BeginBlock()
 local selectedTracks = {}
 local numSelectedTracks = reaper.CountSelectedTracks(0)
 for i = 0, numSelectedTracks - 1 do
-  selectedTracks[i] = reaper.GetSelectedTrack(0, i)
+    selectedTracks[i] = reaper.GetSelectedTrack(0, i)
 end
 
 -- Get the index of the first selected track 
@@ -29,7 +42,6 @@ reaper.InsertTrackAtIndex(firstTrackIndex - 1, true)
 local newTrack = reaper.GetTrack(0, firstTrackIndex - 1)
 reaper.SetMediaTrackInfo_Value(newTrack, "I_FOLDERDEPTH", 1)
 reaper.SetMediaTrackInfo_Value(lastTrack, "I_FOLDERDEPTH", -1)
-
 
 reaper.Undo_EndBlock("Create parent track for selected tracks", -1)
 

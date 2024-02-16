@@ -1,4 +1,15 @@
-function Msg(value)
+--[[
+ * ReaScript Name: Pan selected items 10 units to the left and show take pan envelope
+ * Author: tRoshan
+ * Licence: GPL v3
+ * REAPER: 7.0
+ * Extensions: None
+ * Version: 1.0
+--]] --[[
+ * Changelog:
+ * v1.0 (2024-02-16)
+ 	+ Initial Release
+--]] function Msg(value)
     console = true
     if console then
         reaper.ShowConsoleMsg(tostring(value) .. "\n")
@@ -40,7 +51,6 @@ function createPanTakeEnvelope(item)
     return takeEnvelope
 end
 
-
 function shiftTakePan(item, shift)
     -- get all the points in the take pan envelope and shift them by shift
     local take = reaper.GetActiveTake(item)
@@ -53,12 +63,10 @@ function shiftTakePan(item, shift)
         if value + shift > 1 then
             new_value = 1
         end
-            
+
         reaper.SetEnvelopePoint(takeEnvelope, i, time, new_value, shape, tension, selected, true)
     end
 end
-
-
 
 data = getSelectedItems()
 itemCount = data[1]
@@ -66,7 +74,7 @@ items = data[2]
 -- Msg(itemCount)
 -- Msg(createPanTakeEnvelope(items[0]))
 
-reaper.Main_OnCommandEx(reaper.NamedCommandLookup("_S&M_TAKEENV2"), 0 )
+reaper.Main_OnCommandEx(reaper.NamedCommandLookup("_S&M_TAKEENV2"), 0)
 
 for i = 0, itemCount - 1 do
     shiftTakePan(items[i], 0.1)
