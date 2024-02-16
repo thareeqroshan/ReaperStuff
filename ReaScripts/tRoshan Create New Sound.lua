@@ -1,4 +1,15 @@
-function Msg(str)
+--[[
+* ReaScript Name: tRoshan Create New Sound
+* Description: Setup sfx for Game Audio
+* Author: tRoshan
+* File URI:
+* License: MIT
+* Forum Thread:
+* Forum Thread URI:
+* REAPER: 7.x
+* Extensions: None
+* Version: 1.0
+--]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
 end
 

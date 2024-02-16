@@ -32,7 +32,7 @@
       </version>
     </reapack>
 
-    <reapack name="tRoshan Create New Sound.lua" type="script" desc="Setup sound for Game Audio">
+    <reapack name="tRoshan Create New Sound.lua" type="script" desc="Setup sfx for Game Audio">
       <version name="1.0.0" author="tRoshan">
         <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/70a36e53ce72cdae19e373a4c7695d8a7f081670/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
       </version>
