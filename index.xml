@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1.0.1" name="tRoshan Scripts">
+<index version="1" name="tRoshan Scripts">
   <category name="Reascripts">
     <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
       <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
