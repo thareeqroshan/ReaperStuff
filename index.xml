@@ -31,5 +31,12 @@
         <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/9813d9cf78525a70db0a87a1599116075fa25e40/ReaScripts/tRoshan%20Pan%20item%2010%20units%20to%20the%20right%20and%20show%20take%20pan%20envelope.lua</source>
       </version>
     </reapack>
+
+    <reapack name="tRoshan Create New Sound.lua" type="script" desc="Setup sound for Game Audio">
+      <version name="1.0.0" author="tRoshan">
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/70a36e53ce72cdae19e373a4c7695d8a7f081670/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
+      </version>
+    </reapack>
+
   </category>
 </index>
