@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts">
+<index version="1" name="tRoshan Scripts" commit="23ca75786e5156fefbf9f827a342c72008affd06">
   <category name="Reascripts">
-    <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
-      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
-        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
-      </version>
-    </reapack>
-    <reapack name="tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Paste Fx Paramters of the last focused FX to the clipboard">
-      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
-        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
-      </version>
-    </reapack>
-    <reapack name="tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua" type="script" desc="Move Edit Cursor to next Track and if At the end of the project, insert a new track and move the edit cursor to the new track">
+    <reapack name="tRoshan Create New Sound.lua" type="script" desc="Setup sfx for Game Audio">
       <version name="1.0.0" author="tRoshan">
-        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/3caa6e14be4bf37acc4069a488f72c31507407d6/ReaScripts/tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua</source>
-      </version>
-    </reapack>
-    <reapack name="tRoshan_Create_Folder_From_Selected_Tracks.lua" type="script" desc="Create Folder From Selected Tracks">
-      <version name="1.0.0" author="tRoshan">
-        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/d5bea7f7479665f8773bdb30a1582ef8d9da2e86/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/70a36e53ce72cdae19e373a4c7695d8a7f081670/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan Pan item 10 units to the left and show take pan envelope.lua" type="script" desc="Move Pan envelope to the left by 10%">
@@ -31,12 +16,42 @@
         <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/9813d9cf78525a70db0a87a1599116075fa25e40/ReaScripts/tRoshan%20Pan%20item%2010%20units%20to%20the%20right%20and%20show%20take%20pan%20envelope.lua</source>
       </version>
     </reapack>
-
-    <reapack name="tRoshan Create New Sound.lua" type="script" desc="Setup sfx for Game Audio">
-      <version name="1.0.0" author="tRoshan">
-        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/70a36e53ce72cdae19e373a4c7695d8a7f081670/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
+    <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
+      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
       </version>
     </reapack>
-
+    <reapack name="tRoshan_Create_Folder_From_Selected_Tracks.lua" type="script" desc="Create Folder From Selected Tracks">
+      <version name="1.0.0" author="tRoshan">
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/d5bea7f7479665f8773bdb30a1582ef8d9da2e86/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Paste Fx Paramters of the last focused FX to the clipboard">
+      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua" type="script" desc="Move Edit Cursor to next Track and if At the end of the project, insert a new track and move the edit cursor to the new track">
+      <version name="1.0.0" author="tRoshan">
+        <source main="main">https://raw.githubusercontent.com/thareeqroshan/ReaperStuff/3caa6e14be4bf37acc4069a488f72c31507407d6/ReaScripts/tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="ReaScripts">
+    <reapack name="tRoshan Create New Sound.lua" type="script" desc="tRoshan Create New Sound">
+      <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/23ca75786e5156fefbf9f827a342c72008affd06/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy Fx Paramters of the last focused FX to the clipboard">
+      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Paste Fx Paramters of the last focused FX to the clipboard">
+      <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
+      </version>
+    </reapack>
   </category>
 </index>
