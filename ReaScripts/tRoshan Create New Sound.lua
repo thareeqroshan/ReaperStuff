@@ -10,7 +10,7 @@
 * Extensions: None
 * Version: 1.0.4
 --]] --[[
-Changelog:
+* Changelog:
 v1.0.3 (2024-02-19)
     + Updated region naming to avoid whitespace 
 v1.0.4 (2024-02-19)
