@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0
+* Version: 1.0.1
 --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
 end
@@ -18,6 +18,9 @@ function printTable(t)
         Msg(k .. " : " .. v)
     end
 end
+
+local categories_list = {"sfx", "music", "ambience"}
+local selected_categories = {}
 
 function ListTrackTemplates(path, templates)
     files = reaper.EnumerateFiles(path, 0)
@@ -110,6 +113,17 @@ local window_name_text = rtk.Text {
     fillw = true
 }
 
+title_box = rtk.HBox {
+    spacing = 10,
+    bg = color
+}
+-- title_box:stretch()
+title_box:add(window_name_text, {
+    halign = 'center',
+    valign = 'center',
+    fillw = true
+})
+
 local sound_name_label = rtk.Text {
     text = "Sound Name",
     fontflags = rtk.font.BOLD,
@@ -121,6 +135,16 @@ local sound_name_entry = rtk.Entry {
     placeholder = generatedName,
     textwidth = 10
 }
+
+sound_name_entry:select_all()
+sound_name_entry:focus()
+
+sound_name_box = rtk.HBox {
+    spacing = 10
+}
+sound_name_box:add(sound_name_label)
+sound_name_box:add(sound_name_entry)
+
 num_variations_text = rtk.Text {
     text = "Variations",
     fontflags = rtk.font.BOLD,
@@ -135,6 +159,11 @@ num_variations = rtk.OptionMenu {
     menu = items,
     selected = 5
 }
+number_of_variations_box = rtk.HBox {
+    spacing = 10
+}
+number_of_variations_box:add(num_variations_text)
+number_of_variations_box:add(num_variations)
 
 duration_text = rtk.Text {
     text = "Length",
@@ -163,27 +192,70 @@ duration_box:add(duration_text)
 duration_box:add(duration_slider)
 duration_box:add(duration_value)
 
-track_templates_list = GetTrackTemplates()
 -- create a new option menu with the list of track templates
-track_templates_menu = rtk.OptionMenu {
-    menu = track_templates_list,
-    selected = 1
+categories_menu = rtk.OptionMenu {
+    -- icononly = true,
+    menu = categories_list,
+    selected = 1,
+    checked = true
 }
 
-track_templates_text = rtk.Text {
-    text = "Track Template",
+categories_menu.menu.checked = true
+
+-- add category button
+category_add_new_button = rtk.Button {'New'}
+category_add_new_button.onclick = function(self, event)
+    local ret, inputs = reaper.GetUserInputs("Add Category", 1, "Category Name", "")
+    if not ret then
+        return
+    end
+    -- Msg(inputs)
+    -- printTable(temp_list)
+    local tempList = {}
+    categories_list[#categories_list + 1] = inputs
+    for i, v in ipairs(categories_list) do
+        tempList[i] = categories_list[i]
+    end
+    categories_menu:attr('menu', tempList)
+    categories_menu:attr('selected', #categories_list)
+end
+
+category_add_button = rtk.Button {'Add'}
+category_add_button.onclick = function(self, event)
+    local selected = categories_menu.selected
+    local selected_category = categories_menu.menu[selected]
+    table.insert(selected_categories, selected_category)
+    categories_string_list:attr('text', table.concat(selected_categories, ", "))
+end
+
+categories_text = rtk.Text {
+    text = "Categories",
     fontflags = rtk.font.BOLD,
     w = label_width
 }
-track_template_box = rtk.HBox {
+categories_box = rtk.HBox {
     spacing = 10
 }
-track_template_box:add(track_templates_text)
-track_template_box:add(track_templates_menu)
+categories_box:add(categories_text)
+categories_box:add(categories_menu)
+categories_box:add(category_add_new_button)
+categories_box:add(category_add_button)
 
-title_box = rtk.HBox {
-    spacing = 10,
-    bg = color
+categories_string_list = rtk.Text {
+    text = table.concat(selected_categories, ", ")
+}
+
+categories_string_list_box = rtk.HBox {
+    spacing = 10
+}
+
+categories_string_list_box:add(categories_string_list)
+
+-- Add the button widget to window, centered within it.  In practice you
+-- would probably use a series of box container widgets to craft a layout.
+
+vBox = rtk.VBox {
+    spacing = 10
 }
 
 local button = rtk.Button {'Create Sound'}
@@ -213,33 +285,6 @@ local close_button = rtk.Button {'Close'}
 close_button.onclick = function(self, event)
     window:close()
 end
--- Add the button widget to window, centered within it.  In practice you
--- would probably use a series of box container widgets to craft a layout.
-
-vBox = rtk.VBox {
-    spacing = 10
-}
-number_of_variations_box = rtk.HBox {
-    spacing = 10
-}
-
-number_of_variations_box:add(num_variations_text)
-number_of_variations_box:add(num_variations)
-sound_name_entry:select_all()
-sound_name_entry:focus()
-sound_name_box = rtk.HBox {
-    spacing = 10
-}
-sound_name_box:add(sound_name_label)
-sound_name_box:add(sound_name_entry)
--- local title_color = colors[math.random(#colors)]
-
--- title_box:stretch()
-title_box:add(window_name_text, {
-    halign = 'center',
-    valign = 'center',
-    fillw = true
-})
 
 action_bar_box = rtk.HBox {
     spacing = 10,
@@ -248,24 +293,24 @@ action_bar_box = rtk.HBox {
 action_bar_box:add(button)
 action_bar_box:add(close_button)
 
+-- Add the widgets to the window
 vBox:add(title_box, {
     halign = 'center'
 })
 vBox:add(sound_name_box, {
-    -- halign = 'center'
     tpadding = 10
 })
+vBox:add(categories_box)
+vBox:add(categories_string_list_box)
 vBox:add(number_of_variations_box)
-vBox:add(track_template_box)
 vBox:add(duration_box)
+vBox:add(action_bar_box, {
+    halign = 'center',
+    valign = 'bottom'
+})
 window:add(vBox, {
     halign = 'center',
     padding = 20
-})
-
-window:add(action_bar_box, {
-    halign = 'center',
-    valign = 'bottom'
 })
 
 -- Finally open the window, which we place in the center of the screen.
