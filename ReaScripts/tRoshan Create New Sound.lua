@@ -8,10 +8,10 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.2
+* Version: 1.0.3
 --]] --[[
 Changelog:
-v1.0.2 (2024-02-19)
+v1.0.3 (2024-02-19)
     + Updated region naming to avoid whitespace 
 --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
