@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.4
+* Version: 1.0.5
 --]] --[[
 * Changelog:
 v1.0.3 (2024-02-19)
