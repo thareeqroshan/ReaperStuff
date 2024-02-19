@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="b926d19dffe529d8acc49b21ac9b856136423ba7">
+<index version="1" name="tRoshan Scripts" commit="cde20ccfee519776069880029c94d502244dc655">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="tRoshan Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -25,6 +25,10 @@
       <version name="1.0.6" author="tRoshan" time="2024-02-19T10:47:58Z">
         <changelog><![CDATA[+ Added check if rtk is loaded and display an error message if it's not.]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/b926d19dffe529d8acc49b21ac9b856136423ba7/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
+      </version>
+      <version name="1.0.7" author="tRoshan" time="2024-02-19T10:50:15Z">
+        <changelog><![CDATA[+ Changed check for rtk to use pcall as per documentation]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/cde20ccfee519776069880029c94d502244dc655/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan Pan item 10 units to the left and show take pan envelope.lua" type="script" desc="Pan selected items 10 units to the left and show take pan envelope">
