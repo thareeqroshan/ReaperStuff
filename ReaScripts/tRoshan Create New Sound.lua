@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.6
+* Version: 1.0.7
 --]] --[[
 * Changelog:
 v1.0.3 (2024-02-19)
@@ -17,7 +17,9 @@ v1.0.4 (2024-02-19)
     + Added two digit padding to the region name offset
 v1.0.6 (2024-02-19)
     + Added check if rtk is loaded and display an error message if it's not.
---]] function Msg(str)
+v1.0.7 (2024-02-19)
+    + Changed check for rtk to use pcall as per documentation
+    --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
 end
 
@@ -85,12 +87,12 @@ RGBToNative(70, 130, 180) -- Steel Blue
 -- GUI
 package.path = reaper.GetResourcePath() .. '/Scripts/rtk/1/?.lua'
 -- Now we can load the rtk library.
-local rtk = require('rtk')
-
--- Check if rtk is loaded and display an error message if it's not.
-if not rtk then
-    reaper.ShowMessageBox("This script requires the rtk library. Please install it using ReaPack and try again.",
-        "Error", 0)
+local ok, rtk = pcall(function()
+    return require('rtk')
+end)
+if not ok then
+    reaper.MB('This script requires the REAPER Toolkit ReaPack. Visit https://reapertoolkit.dev for instructions.',
+        'Missing Library', 0)
     return
 end
 
