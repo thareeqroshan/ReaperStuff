@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.7
+* Version: 1.0.8
 --]] --[[
 * Changelog:
 v1.0.3 (2024-02-19)
@@ -19,6 +19,8 @@ v1.0.6 (2024-02-19)
     + Added check if rtk is loaded and display an error message if it's not.
 v1.0.7 (2024-02-19)
     + Changed check for rtk to use pcall as per documentation
+v1.0.8 (2024-02-19)
++ Added checkbox to reset sound name to random
     --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
 end
@@ -157,11 +159,17 @@ local sound_name_entry = rtk.Entry {
 sound_name_entry:select_all()
 sound_name_entry:focus()
 
+sound_name_reset_checkbox = rtk.Checkbox {
+    text = "Reset to Random",
+    checked = true
+}
+
 sound_name_box = rtk.HBox {
     spacing = 10
 }
 sound_name_box:add(sound_name_label)
 sound_name_box:add(sound_name_entry)
+sound_name_box:add(sound_name_reset_checkbox)
 
 num_variations_text = rtk.Text {
     text = "Variations",
@@ -294,7 +302,9 @@ button.onclick = function(self, event)
         reaper.Undo_EndBlock("Create New Sound : " .. sound_name, 0)
         refreshColor()
         title_box:attr('bg', color)
-        sound_name_entry:attr('value', getRandomSoundEffectName())
+        if (sound_name_reset_checkbox.checked) then
+            sound_name_entry:attr('value', getRandomSoundEffectName())
+        end
     end
 end
 
