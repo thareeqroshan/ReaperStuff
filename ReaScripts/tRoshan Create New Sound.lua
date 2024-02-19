@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.81
+* Version: 1.0.82
 --]] --[[
 * Changelog:
 v1.0.3 (2024-02-19)
@@ -159,9 +159,9 @@ local sound_name_entry = rtk.Entry {
 sound_name_entry:select_all()
 sound_name_entry:focus()
 
-sound_name_reset_checkbox = rtk.Checkbox {
+sound_name_reset_checkbox = rtk.CheckBox {
     label = "Reset to Random",
-    value = rtk.Checkbox.CHECKED
+    value = rtk.CheckBox.CHECKED
 }
 
 sound_name_box = rtk.HBox {
@@ -302,7 +302,7 @@ button.onclick = function(self, event)
         reaper.Undo_EndBlock("Create New Sound : " .. sound_name, 0)
         refreshColor()
         title_box:attr('bg', color)
-        if (sound_name_reset_checkbox.checked) then
+        if (sound_name_reset_checkbox.value == rtk.CheckBox.CHECKED) then
             sound_name_entry:attr('value', getRandomSoundEffectName())
         end
     end
