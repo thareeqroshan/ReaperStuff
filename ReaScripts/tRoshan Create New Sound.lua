@@ -9,6 +9,10 @@
 * REAPER: 7.x
 * Extensions: None
 * Version: 1.0.2
+--]] --[[
+Changelog:
+v1.0.2 (2024-02-19)
+    + Updated region naming to avoid whitespace 
 --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
 end
@@ -377,7 +381,7 @@ function CreateRegionsWithPadding(sound_name, num_variations, variation_length, 
     local padding = variation_length / 2 -- Calculate padding
     local track = reaper.GetTrack(0, folder_idx)
     for i = 1, num_variations do
-        local region_name = sound_name .. " " .. i
+        local region_name = sound_name .. "_" .. i
         regionindex = reaper.AddProjectMarker2(0, true, start_pos, start_pos + variation_length, region_name, -1, color)
         start_pos = start_pos + variation_length + padding -- Include padding for the next start position
         reaper.SetRegionRenderMatrix(0, regionindex, track, 1)
