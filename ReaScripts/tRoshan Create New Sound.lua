@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.8
+* Version: 1.0.81
 --]] --[[
 * Changelog:
 v1.0.3 (2024-02-19)
@@ -160,8 +160,8 @@ sound_name_entry:select_all()
 sound_name_entry:focus()
 
 sound_name_reset_checkbox = rtk.Checkbox {
-    text = "Reset to Random",
-    checked = true
+    label = "Reset to Random",
+    value = rtk.Checkbox.CHECKED
 }
 
 sound_name_box = rtk.HBox {
