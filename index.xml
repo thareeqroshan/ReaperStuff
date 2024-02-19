@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="18d146c6939e6d92fbfa08e5ebed70348ba0c268">
+<index version="1" name="tRoshan Scripts" commit="78bf00d89bea51cca8c4937a39012015c3d7344b">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="tRoshan Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -18,6 +18,9 @@
       <version name="1.0.4" author="tRoshan" time="2024-02-19T10:36:17Z">
         <changelog><![CDATA[+ Added two digit padding to the region name offset]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/18d146c6939e6d92fbfa08e5ebed70348ba0c268/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
+      </version>
+      <version name="1.0.5" author="tRoshan" time="2024-02-19T10:39:10Z">
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/78bf00d89bea51cca8c4937a39012015c3d7344b/ReaScripts/tRoshan%20Create%20New%20Sound.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan Pan item 10 units to the left and show take pan envelope.lua" type="script" desc="Pan selected items 10 units to the left and show take pan envelope">
