@@ -8,7 +8,7 @@
 * Forum Thread URI:
 * REAPER: 7.x
 * Extensions: None
-* Version: 1.0.82
+* Version: 1.0.83
 --]] --[[
 * Changelog:
 v1.0.3 (2024-02-19)
@@ -21,6 +21,8 @@ v1.0.7 (2024-02-19)
     + Changed check for rtk to use pcall as per documentation
 v1.0.8 (2024-02-19)
 + Added checkbox to reset sound name to random
+1.0.83 (2024-02-20)
++ Move edit cursor to the end of the last region + padding after creating regions
     --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
 end
@@ -412,6 +414,8 @@ function CreateRegionsWithPadding(sound_name, num_variations, variation_length, 
         start_pos = start_pos + variation_length + padding -- Include padding for the next start position
         reaper.SetRegionRenderMatrix(0, regionindex, track, 1)
     end
+    -- set the editor cursor to the end of the last region + padding
+    reaper.SetEditCurPos(start_pos, true, true)
 end
 
 -- Main script
