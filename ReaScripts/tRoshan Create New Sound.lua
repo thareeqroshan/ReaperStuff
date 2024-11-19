@@ -21,7 +21,7 @@ v1.0.7 (2024-02-19)
     + Changed check for rtk to use pcall as per documentation
 v1.0.8 (2024-02-19)
 + Added checkbox to reset sound name to random
-1.0.83 (2024-02-20)
+v1.0.83 (2024-02-20)
 + Move edit cursor to the end of the last region + padding after creating regions
     --]] function Msg(str)
     reaper.ShowConsoleMsg(tostring(str) .. "\n")
