@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="53244ecd42b4d3bee5d1f46b88794b4d053081c5">
+<index version="1" name="tRoshan Scripts" commit="419f21dc966db3d4772f683988ad417d53641359">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="tRoshan Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -78,10 +78,31 @@
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
       </version>
     </reapack>
-    <reapack name="tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua" type="script" desc="Select Next Track And If No Track Available Insert One And Select It">
-      <version name="1.0" author="tRoshan" time="2024-02-16T08:37:47Z">
-        <changelog><![CDATA[+ Initial Release]]></changelog>
-        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/b5d8bc80d7e0fd3620e380fa1f77058504b99e04/ReaScripts/tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua</source>
+    <reapack name="tRoshan Track Navigation" type="script" desc="Track Navigation - visibility-aware select, extend and shrink actions">
+      <version name="2.0" author="tRoshan" time="2026-08-05T13:55:52Z">
+        <changelog><![CDATA[+ Bundled the track navigation actions into a single package sharing Functions/TrackNav.lua
++ Navigation now skips tracks hidden from the TCP and tracks inside fully collapsed folders
++ Scroll-into-view only fires when the target track is actually off-screen (uses js_ReaScriptAPI when present)
++ Replaces the standalone "Select Next Track And If No Track Available Insert One And Select It" package]]></changelog>
+        <source file="Functions/TrackNav.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/Functions/TrackNav.lua</source>
+        <source main="main" file="tRoshan Add Track above selection to the selection.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan%20Add%20Track%20above%20selection%20to%20the%20selection.lua</source>
+        <source main="main" file="tRoshan Add Track below selection to the selection.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan%20Add%20Track%20below%20selection%20to%20the%20selection.lua</source>
+        <source main="main" file="tRoshan Remove Track above from selection.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan%20Remove%20Track%20above%20from%20selection.lua</source>
+        <source main="main" file="tRoshan Remove Track below from selection.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan%20Remove%20Track%20below%20from%20selection.lua</source>
+        <source main="main" file="tRoshan_Multi_Track_Selection_Tool_Up_Direction.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan_Multi_Track_Selection_Tool_Up_Direction.lua</source>
+        <source main="main" file="tRoshan_Select_Next_Visible_Track.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan_Select_Next_Visible_Track.lua</source>
+        <source main="main" file="tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan_Select_Next_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua</source>
+        <source main="main" file="tRoshan_Select_Previous_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan_Select_Previous_Track_And_If_No_Track_Available_Insert_One_And_Select_It.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan Video Scene Detect GUI.lua" type="script" desc="Video Scene Detect - detect scene cuts in the selected video item and create markers or regions">
+      <version name="1.0.0" author="tRoshan" time="2026-08-05T13:55:52Z">
+        <changelog><![CDATA[+ Initial Release
++ Requires ReaImGui and the PySceneDetect CLI on PATH (pip install "scenedetect[opencv]")
++ Choose markers or regions, detector, threshold, minimum scene length, name prefix and colour
++ Optionally clear existing scene markers/regions in range and scan only the time selection]]></changelog>
+        <source file="Functions/SceneDetect.lua">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/Functions/SceneDetect.lua</source>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/419f21dc966db3d4772f683988ad417d53641359/ReaScripts/tRoshan%20Video%20Scene%20Detect%20GUI.lua</source>
       </version>
     </reapack>
   </category>
