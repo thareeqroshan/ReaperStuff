@@ -3,10 +3,12 @@
  * Author: tRoshan
  * Licence: GPL v3
  * REAPER: 7.0
- * Extensions: None
- * Version: 1.0
+ * Extensions: js_ReaScriptAPI (optional, for scroll-into-view)
+ * Version: 2.0
 --]] --[[
  * Changelog:
+ * v2.0 (2026-08-05)
+ 	+ Moved onto Functions/TrackNav.lua: hidden tracks and tracks inside collapsed folders are skipped
  * v1.0 (2024-02-16)
  	+ Initial Release
 --]]
