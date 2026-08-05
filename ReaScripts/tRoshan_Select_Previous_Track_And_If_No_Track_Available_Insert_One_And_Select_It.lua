@@ -1,5 +1,5 @@
 --[[
- * ReaScript Name: Select Next Track And If No Track Available Insert One And Select It
+ * ReaScript Name: Select Previous Track And If No Track Available Insert One And Select It
  * Author: tRoshan
  * Licence: GPL v3
  * REAPER: 7.0
@@ -15,4 +15,4 @@ local info = debug.getinfo(1, 'S')
 local ScriptPath = info.source:match([[^@?(.*[\/])[^\/]-$]])
 local Nav = dofile(ScriptPath .. 'Functions/TrackNav.lua')
 
-Nav.selectNext(true)
+Nav.selectPrevious(true)
