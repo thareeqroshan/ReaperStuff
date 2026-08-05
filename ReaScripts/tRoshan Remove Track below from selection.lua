@@ -4,7 +4,7 @@
  * Licence: GPL v3
  * REAPER: 7.0
  * Extensions: None
- * Version: 2.0
+ * Version: 2.2
 --]]
 
 local info = debug.getinfo(1, 'S')

@@ -4,7 +4,7 @@
  * Licence: GPL v3
  * REAPER: 7.0
  * Extensions: js_ReaScriptAPI (optional, for scroll-into-view)
- * Version: 2.1
+ * Version: 2.2
 --]]
 
 local info = debug.getinfo(1, 'S')
