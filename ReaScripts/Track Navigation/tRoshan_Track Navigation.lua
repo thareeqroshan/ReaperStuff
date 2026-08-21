@@ -1,0 +1,19 @@
+-- @description Track Navigation
+-- @author tRoshan
+-- @version 2.3
+-- @metapackage
+-- @provides
+--   [main] tRoshan_Add track above selection.lua
+--   [main] tRoshan_Add track below selection.lua
+--   [main] tRoshan_Remove track above from selection.lua
+--   [main] tRoshan_Remove track below from selection.lua
+--   [main] tRoshan_Select next track or insert one.lua
+--   [main] tRoshan_Select next visible track.lua
+--   [main] tRoshan_Select previous track or insert one.lua
+--   [main] tRoshan_Select previous visible track.lua
+--   Functions/TrackNav.lua
+-- @changelog
+--   Moved the scripts into a Track Navigation folder and renamed them for readability
+--   MIGRATION: this installs as a new package. The old "tRoshan Track Navigation" is now
+--   obsolete - remove it from Extensions > ReaPack > Browse packages, and reassign any
+--   keyboard shortcuts or toolbar buttons, which still point at the old file names.
