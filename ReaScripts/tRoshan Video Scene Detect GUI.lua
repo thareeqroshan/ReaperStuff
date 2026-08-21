@@ -1,11 +1,13 @@
 --[[
- * ReaScript Name: tRoshan Video Scene Detect GUI
+ * ReaScript Name: Video Scene Detect
  * Description: Configure scene detection (markers/regions, detector, threshold, colour, ...) then run it on the selected video item.
  * Author: tRoshan
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.0.1
+ * Version: 1.0.2
+ * Provides: Functions/SceneDetect.lua
+ * Changelog: Ship Functions/SceneDetect.lua with the package so a fresh install can load it
 --]]
 
 local info = debug.getinfo(1, 'S')

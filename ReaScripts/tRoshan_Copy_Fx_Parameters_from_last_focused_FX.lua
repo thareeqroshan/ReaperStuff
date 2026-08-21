@@ -1,5 +1,5 @@
 --[[
- * ReaScript Name: Copy Fx Paramters of the last focused FX to the clipboard
+ * ReaScript Name: Copy FX parameters from the last focused FX
  * Author: tRoshan
  * Licence: GPL v3
  * REAPER: 7.0

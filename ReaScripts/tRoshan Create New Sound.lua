@@ -1,5 +1,5 @@
 --[[
-* ReaScript Name: tRoshan Create New Sound
+* ReaScript Name: Create New Sound
 * Description: Setup sfx for Game Audio
 * Author: tRoshan
 * File URI:
