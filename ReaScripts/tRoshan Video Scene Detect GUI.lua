@@ -4,8 +4,8 @@
  * Author: tRoshan
  * License: GPL v3
  * REAPER: 7.x
- * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (pip install "scenedetect[opencv]").
- * Version: 1.0.0
+ * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
+ * Version: 1.0.1
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -170,6 +170,21 @@ local function drawControls()
     if status ~= "" then
         r.ImGui_Spacing(ctx)
         r.ImGui_TextWrapped(ctx, status)
+    end
+
+    r.ImGui_Spacing(ctx)
+    if r.ImGui_CollapsingHeader(ctx, "Installing the scenedetect CLI") then
+        r.ImGui_TextWrapped(ctx, "Windows installer, no Python needed:")
+        r.ImGui_Text(ctx, SceneDetect.DOWNLOAD_URL)
+        if r.ImGui_Button(ctx, "Copy link") then
+            r.ImGui_SetClipboardText(ctx, SceneDetect.DOWNLOAD_URL)
+        end
+        r.ImGui_Spacing(ctx)
+        r.ImGui_TextWrapped(ctx, "Or, if you already have Python:")
+        r.ImGui_Text(ctx, SceneDetect.INSTALL_COMMAND)
+        if r.ImGui_Button(ctx, "Copy pip command") then
+            r.ImGui_SetClipboardText(ctx, SceneDetect.INSTALL_COMMAND)
+        end
     end
 end
 

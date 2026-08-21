@@ -16,6 +16,10 @@ M.OUTPUT_REGIONS = "regions"
 M.OUTPUT_MARKERS = "markers"
 M.DETECTORS = {"detect-adaptive", "detect-content", "detect-threshold"}
 
+-- The Windows installer needs no Python; the pip package is for people who already have it.
+M.DOWNLOAD_URL = "https://www.scenedetect.com/download/"
+M.INSTALL_COMMAND = "pip install --upgrade scenedetect"
+
 local function quote(path)
     return '"' .. path .. '"'
 end
@@ -148,7 +152,8 @@ function M.detect(options)
         return nil, sourceOrErr
     end
     if not M.isAvailable() then
-        return nil, 'Could not run "scenedetect". Install it: pip install "scenedetect[opencv]"'
+        return nil, 'Could not run "scenedetect". Install it from ' .. M.DOWNLOAD_URL ..
+            ' or, with Python installed, run: ' .. M.INSTALL_COMMAND
     end
 
     local itemStart = r.GetMediaItemInfo_Value(item, "D_POSITION")
