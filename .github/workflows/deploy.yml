@@ -1,0 +1,34 @@
+name: deploy
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  reapack-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # reapack-index reads package versions out of the git history, not the worktree.
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install reapack-index
+        run: gem install reapack-index --pre
+
+      - name: Regenerate the index
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          reapack-index --commit --name 'tRoshan Scripts'
+
+      # Pushes made with GITHUB_TOKEN do not retrigger workflows, so this cannot loop.
+      - name: Push the updated index
+        run: git push
