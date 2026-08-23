@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.4.1
+ * Version: 1.4.2
  * Provides: Functions/SceneDetect.lua
- * Changelog: Only scan the part of the video the item actually uses, which is much faster on long source files
+ * Changelog: Show a Detecting message before the scan starts, so it no longer looks like REAPER has hung
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -95,6 +95,7 @@ end
 local opts = loadOptions()
 local imguiColor = nativeToImgui(opts.color)
 local status = ""
+local pendingDetect = false
 
 local cliInstalled = true
 local checkedThisSession = false
@@ -214,23 +215,17 @@ local function drawControls()
 
     r.ImGui_Separator(ctx)
 
-    if not item then
+    -- Captured before the button: setting pendingDetect below would otherwise unbalance BeginDisabled.
+    local disabled = not item or pendingDetect
+    if disabled then
         r.ImGui_BeginDisabled(ctx)
     end
     if r.ImGui_Button(ctx, "Detect", 120, 30) then
         saveOptions(opts)
-        local count, detectErr, reason = SceneDetect.detect(opts)
-        if count then
-            status = string.format("Created %d %s.", count, opts.output)
-        elseif reason == SceneDetect.ERR_NOT_INSTALLED then
-            r.DeleteExtState(EXT_SECTION, "cliFound", true)
-            cliInstalled = false
-            status = ""
-        else
-            status = detectErr
-        end
+        status = "Detecting scenes..."
+        pendingDetect = true
     end
-    if not item then
+    if disabled then
         r.ImGui_EndDisabled(ctx)
     end
 
@@ -240,7 +235,25 @@ local function drawControls()
     end
 end
 
+local function runPendingDetect()
+    pendingDetect = false
+    local count, detectErr, reason = SceneDetect.detect(opts)
+    if count then
+        status = string.format("Created %d %s.", count, opts.output)
+    elseif reason == SceneDetect.ERR_NOT_INSTALLED then
+        r.DeleteExtState(EXT_SECTION, "cliFound", true)
+        cliInstalled = false
+        status = ""
+    else
+        status = detectErr
+    end
+end
+
 local function loop()
+    -- Run at the top of the next frame, once REAPER has drawn the frame announcing the scan.
+    if pendingDetect then
+        runPendingDetect()
+    end
     r.ImGui_SetNextWindowSize(ctx, 440, 360, r.ImGui_Cond_FirstUseEver())
     local visible, open = r.ImGui_Begin(ctx, 'Video Scene Detect', true)
     if visible then
