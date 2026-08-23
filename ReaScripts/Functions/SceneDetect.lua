@@ -89,16 +89,16 @@ local function deleteScenesInRange(prefix, rangeStart, rangeEnd)
 end
 
 -- Create one marker or region per scene, clipped to the target range.
-local function createFromScenes(scenes, options, itemStart, rangeStart, rangeEnd)
+local function createFromScenes(scenes, options, rangeStart, rangeEnd)
     local wantRegion = options.output == M.OUTPUT_REGIONS
     local created = 0
     for index, scene in ipairs(scenes) do
-        if scene.startSeconds and scene.endSeconds then
-            local startPos = itemStart + scene.startSeconds
+        if scene.startPos then
+            local startPos = scene.startPos
             if startPos >= rangeStart - EPSILON and startPos < rangeEnd then
                 local name = options.namePrefix .. index
                 if wantRegion then
-                    local endPos = itemStart + scene.endSeconds
+                    local endPos = scene.endPos
                     if endPos > rangeEnd then
                         endPos = rangeEnd
                     end
@@ -162,6 +162,11 @@ function M.detect(options)
     local itemStart = r.GetMediaItemInfo_Value(item, "D_POSITION")
     local itemEnd = itemStart + r.GetMediaItemInfo_Value(item, "D_LENGTH")
 
+    -- scenedetect reports positions inside the source file, so the take's trim and rate must be undone.
+    local take = r.GetActiveTake(item)
+    local startOffset = r.GetMediaItemTakeInfo_Value(take, "D_STARTOFFS")
+    local playRate = r.GetMediaItemTakeInfo_Value(take, "D_PLAYRATE")
+
     local rangeStart, rangeEnd = itemStart, itemEnd
     if options.useTimeSelection then
         local selStart, selEnd = r.GetSet_LoopTimeRange(false, false, 0, 0, false)
@@ -209,12 +214,19 @@ function M.detect(options)
         return nil, "No scenes were detected."
     end
 
+    for _, scene in ipairs(scenes) do
+        if scene.startSeconds and scene.endSeconds then
+            scene.startPos = itemStart + (scene.startSeconds - startOffset) / playRate
+            scene.endPos = itemStart + (scene.endSeconds - startOffset) / playRate
+        end
+    end
+
     r.Undo_BeginBlock()
     r.PreventUIRefresh(1)
     if options.clearExisting then
         deleteScenesInRange(options.namePrefix, rangeStart, rangeEnd)
     end
-    local created = createFromScenes(scenes, options, itemStart, rangeStart, rangeEnd)
+    local created = createFromScenes(scenes, options, rangeStart, rangeEnd)
     r.PreventUIRefresh(-1)
     r.UpdateArrange()
     r.Undo_EndBlock("Video Scene Detect: create " .. created .. " " .. options.output, -1)

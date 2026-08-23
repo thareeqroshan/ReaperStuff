@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.2
+ * Version: 1.3
  * Provides: Functions/SceneDetect.lua
- * Changelog: Show install help in the main window instead of a pop-up, with an Open button and selectable fields
+ * Changelog: Fix marker and region positions on trimmed or rate-changed items
 --]]
 
 local info = debug.getinfo(1, 'S')
