@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.1.1
+ * Version: 1.2
  * Provides: Functions/SceneDetect.lua
- * Changelog: Cut the missing-PySceneDetect pop-up down to a single line and a link
+ * Changelog: Show install help in the main window instead of a pop-up, with an Open button and selectable fields
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -96,7 +96,7 @@ local opts = loadOptions()
 local imguiColor = nativeToImgui(opts.color)
 local status = ""
 
-local INSTALL_POPUP = "PySceneDetect not installed"
+local cliInstalled = true
 local checkedThisSession = false
 
 -- Probing costs a Python process, so once the helper is found we remember it and stop looking.
@@ -108,33 +108,56 @@ local function checkInstallOnce()
     if r.GetExtState(EXT_SECTION, "cliFound") == "1" then
         return
     end
-    if SceneDetect.isAvailable() then
+    cliInstalled = SceneDetect.isAvailable()
+    if cliInstalled then
         r.SetExtState(EXT_SECTION, "cliFound", "1", true)
-    else
-        r.ImGui_OpenPopup(ctx, INSTALL_POPUP)
     end
 end
 
-local function drawInstallPopup()
-    if not r.ImGui_BeginPopupModal(ctx, INSTALL_POPUP, nil, r.ImGui_WindowFlags_AlwaysAutoResize()) then
-        return
+-- ReaImGui has no open-URL call and CF_ShellExecute would pull in SWS, so shell out per platform.
+local function openUrl(url)
+    local system = r.GetOS()
+    if system:match("^Win") then
+        os.execute('start "" "' .. url .. '"')
+    elseif system:match("OSX") or system:match("macOS") then
+        os.execute('open "' .. url .. '"')
+    else
+        os.execute('xdg-open "' .. url .. '"')
     end
-    r.ImGui_Text(ctx, "Scene detection needs PySceneDetect.")
+end
+
+local function drawInstallHelp()
+    r.ImGui_TextWrapped(ctx, "Scene detection needs PySceneDetect, which is not installed yet.")
     r.ImGui_Spacing(ctx)
-    r.ImGui_Text(ctx, SceneDetect.DOWNLOAD_URL)
-    r.ImGui_Spacing(ctx)
-    if r.ImGui_Button(ctx, "Copy link") then
-        r.ImGui_SetClipboardText(ctx, SceneDetect.DOWNLOAD_URL)
-    end
+
+    r.ImGui_Text(ctx, "Download it:")
+    r.ImGui_SetNextItemWidth(ctx, 290)
+    r.ImGui_InputText(ctx, "##url", SceneDetect.DOWNLOAD_URL, r.ImGui_InputTextFlags_ReadOnly())
     r.ImGui_SameLine(ctx)
-    if r.ImGui_Button(ctx, "Close") then
-        r.ImGui_CloseCurrentPopup(ctx)
+    if r.ImGui_Button(ctx, "Open") then
+        openUrl(SceneDetect.DOWNLOAD_URL)
     end
-    r.ImGui_EndPopup(ctx)
+
+    r.ImGui_Spacing(ctx)
+    r.ImGui_Text(ctx, "Or, if you already have Python:")
+    r.ImGui_SetNextItemWidth(ctx, 290)
+    r.ImGui_InputText(ctx, "##pip", SceneDetect.INSTALL_COMMAND, r.ImGui_InputTextFlags_ReadOnly())
+
+    r.ImGui_Spacing(ctx)
+    r.ImGui_Separator(ctx)
+    if r.ImGui_Button(ctx, "Check again", 120, 0) then
+        r.DeleteExtState(EXT_SECTION, "cliFound", true)
+        checkedThisSession = false
+        checkInstallOnce()
+    end
 end
 
 local function drawControls()
     checkInstallOnce()
+    if not cliInstalled then
+        drawInstallHelp()
+        return
+    end
     local item, sourceOrErr, videoPath = SceneDetect.getSelectedVideo()
     if item then
         r.ImGui_Text(ctx, "Selected: " .. (videoPath:match("[^/\\]+$") or videoPath))
@@ -201,7 +224,7 @@ local function drawControls()
             status = string.format("Created %d %s.", count, opts.output)
         elseif reason == SceneDetect.ERR_NOT_INSTALLED then
             r.DeleteExtState(EXT_SECTION, "cliFound", true)
-            r.ImGui_OpenPopup(ctx, INSTALL_POPUP)
+            cliInstalled = false
             status = ""
         else
             status = detectErr
@@ -215,8 +238,6 @@ local function drawControls()
         r.ImGui_Spacing(ctx)
         r.ImGui_TextWrapped(ctx, status)
     end
-
-    drawInstallPopup()
 end
 
 local function loop()
