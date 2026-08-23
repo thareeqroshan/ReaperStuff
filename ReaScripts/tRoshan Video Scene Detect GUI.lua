@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.0.2
+ * Version: 1.1
  * Provides: Functions/SceneDetect.lua
- * Changelog: Ship Functions/SceneDetect.lua with the package so a fresh install can load it
+ * Changelog: Explain the missing scenedetect helper in a pop-up instead of a permanent panel
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -96,7 +96,55 @@ local opts = loadOptions()
 local imguiColor = nativeToImgui(opts.color)
 local status = ""
 
+local INSTALL_POPUP = "Scene detection helper missing"
+local checkedThisSession = false
+
+-- Probing costs a Python process, so once the helper is found we remember it and stop looking.
+local function checkInstallOnce()
+    if checkedThisSession then
+        return
+    end
+    checkedThisSession = true
+    if r.GetExtState(EXT_SECTION, "cliFound") == "1" then
+        return
+    end
+    if SceneDetect.isAvailable() then
+        r.SetExtState(EXT_SECTION, "cliFound", "1", true)
+    else
+        r.ImGui_OpenPopup(ctx, INSTALL_POPUP)
+    end
+end
+
+local function drawInstallPopup()
+    -- Auto-resize would let TextWrapped stretch the modal to the longest sentence, so pin the width.
+    r.ImGui_SetNextWindowSize(ctx, 420, 0, r.ImGui_Cond_Appearing())
+    if not r.ImGui_BeginPopupModal(ctx, INSTALL_POPUP) then
+        return
+    end
+    r.ImGui_TextWrapped(ctx, "Finding scenes in a video needs a small free program called PySceneDetect. It is not installed yet.")
+    r.ImGui_Spacing(ctx)
+    r.ImGui_TextWrapped(ctx, "Easiest way - download and run the installer:")
+    r.ImGui_Text(ctx, SceneDetect.DOWNLOAD_URL)
+    if r.ImGui_Button(ctx, "Copy download link") then
+        r.ImGui_SetClipboardText(ctx, SceneDetect.DOWNLOAD_URL)
+    end
+    r.ImGui_Spacing(ctx)
+    r.ImGui_TextWrapped(ctx, "Already use Python? Run this in a command prompt instead:")
+    r.ImGui_Text(ctx, SceneDetect.INSTALL_COMMAND)
+    if r.ImGui_Button(ctx, "Copy command") then
+        r.ImGui_SetClipboardText(ctx, SceneDetect.INSTALL_COMMAND)
+    end
+    r.ImGui_Spacing(ctx)
+    r.ImGui_TextWrapped(ctx, "If REAPER still cannot find it afterwards, restart REAPER - it only picks up newly installed programs when it starts.")
+    r.ImGui_Separator(ctx)
+    if r.ImGui_Button(ctx, "Close", 120, 0) then
+        r.ImGui_CloseCurrentPopup(ctx)
+    end
+    r.ImGui_EndPopup(ctx)
+end
+
 local function drawControls()
+    checkInstallOnce()
     local item, sourceOrErr, videoPath = SceneDetect.getSelectedVideo()
     if item then
         r.ImGui_Text(ctx, "Selected: " .. (videoPath:match("[^/\\]+$") or videoPath))
@@ -158,9 +206,13 @@ local function drawControls()
     end
     if r.ImGui_Button(ctx, "Detect", 120, 30) then
         saveOptions(opts)
-        local count, detectErr = SceneDetect.detect(opts)
+        local count, detectErr, reason = SceneDetect.detect(opts)
         if count then
             status = string.format("Created %d %s.", count, opts.output)
+        elseif reason == SceneDetect.ERR_NOT_INSTALLED then
+            r.DeleteExtState(EXT_SECTION, "cliFound", true)
+            r.ImGui_OpenPopup(ctx, INSTALL_POPUP)
+            status = ""
         else
             status = detectErr
         end
@@ -174,20 +226,7 @@ local function drawControls()
         r.ImGui_TextWrapped(ctx, status)
     end
 
-    r.ImGui_Spacing(ctx)
-    if r.ImGui_CollapsingHeader(ctx, "Installing the scenedetect CLI") then
-        r.ImGui_TextWrapped(ctx, "Windows installer, no Python needed:")
-        r.ImGui_Text(ctx, SceneDetect.DOWNLOAD_URL)
-        if r.ImGui_Button(ctx, "Copy link") then
-            r.ImGui_SetClipboardText(ctx, SceneDetect.DOWNLOAD_URL)
-        end
-        r.ImGui_Spacing(ctx)
-        r.ImGui_TextWrapped(ctx, "Or, if you already have Python:")
-        r.ImGui_Text(ctx, SceneDetect.INSTALL_COMMAND)
-        if r.ImGui_Button(ctx, "Copy pip command") then
-            r.ImGui_SetClipboardText(ctx, SceneDetect.INSTALL_COMMAND)
-        end
-    end
+    drawInstallPopup()
 end
 
 local function loop()

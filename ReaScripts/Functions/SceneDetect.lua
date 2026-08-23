@@ -20,6 +20,9 @@ M.DETECTORS = {"detect-adaptive", "detect-content", "detect-threshold"}
 M.DOWNLOAD_URL = "https://www.scenedetect.com/download/"
 M.INSTALL_COMMAND = "pip install --upgrade scenedetect"
 
+-- Returned by M.detect so callers can offer install help instead of showing a raw error.
+M.ERR_NOT_INSTALLED = "notinstalled"
+
 local function quote(path)
     return '"' .. path .. '"'
 end
@@ -153,7 +156,7 @@ function M.detect(options)
     end
     if not M.isAvailable() then
         return nil, 'Could not run "scenedetect". Install it from ' .. M.DOWNLOAD_URL ..
-            ' or, with Python installed, run: ' .. M.INSTALL_COMMAND
+            ' or, with Python installed, run: ' .. M.INSTALL_COMMAND, M.ERR_NOT_INSTALLED
     end
 
     local itemStart = r.GetMediaItemInfo_Value(item, "D_POSITION")
