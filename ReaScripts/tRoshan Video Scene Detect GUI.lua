@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.5
+ * Version: 1.5.1
  * Provides: Functions/SceneDetect.lua
- * Changelog: Detect scenes across every selected video item instead of only the first
+ * Changelog: Say that REAPER may stop responding while scenes are being detected
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -225,7 +225,7 @@ local function drawControls()
     end
     if r.ImGui_Button(ctx, "Detect", 120, 30) then
         saveOptions(opts)
-        status = "Detecting scenes..."
+        status = "Detecting scenes...\nThis window and REAPER may stop responding until it finishes."
         pendingDetect = true
     end
     if disabled then
