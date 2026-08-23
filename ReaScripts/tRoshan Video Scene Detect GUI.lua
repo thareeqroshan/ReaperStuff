@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.1
+ * Version: 1.1.1
  * Provides: Functions/SceneDetect.lua
- * Changelog: Explain the missing scenedetect helper in a pop-up instead of a permanent panel
+ * Changelog: Cut the missing-PySceneDetect pop-up down to a single line and a link
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -96,7 +96,7 @@ local opts = loadOptions()
 local imguiColor = nativeToImgui(opts.color)
 local status = ""
 
-local INSTALL_POPUP = "Scene detection helper missing"
+local INSTALL_POPUP = "PySceneDetect not installed"
 local checkedThisSession = false
 
 -- Probing costs a Python process, so once the helper is found we remember it and stop looking.
@@ -116,28 +116,18 @@ local function checkInstallOnce()
 end
 
 local function drawInstallPopup()
-    -- Auto-resize would let TextWrapped stretch the modal to the longest sentence, so pin the width.
-    r.ImGui_SetNextWindowSize(ctx, 420, 0, r.ImGui_Cond_Appearing())
-    if not r.ImGui_BeginPopupModal(ctx, INSTALL_POPUP) then
+    if not r.ImGui_BeginPopupModal(ctx, INSTALL_POPUP, nil, r.ImGui_WindowFlags_AlwaysAutoResize()) then
         return
     end
-    r.ImGui_TextWrapped(ctx, "Finding scenes in a video needs a small free program called PySceneDetect. It is not installed yet.")
+    r.ImGui_Text(ctx, "Scene detection needs PySceneDetect.")
     r.ImGui_Spacing(ctx)
-    r.ImGui_TextWrapped(ctx, "Easiest way - download and run the installer:")
     r.ImGui_Text(ctx, SceneDetect.DOWNLOAD_URL)
-    if r.ImGui_Button(ctx, "Copy download link") then
+    r.ImGui_Spacing(ctx)
+    if r.ImGui_Button(ctx, "Copy link") then
         r.ImGui_SetClipboardText(ctx, SceneDetect.DOWNLOAD_URL)
     end
-    r.ImGui_Spacing(ctx)
-    r.ImGui_TextWrapped(ctx, "Already use Python? Run this in a command prompt instead:")
-    r.ImGui_Text(ctx, SceneDetect.INSTALL_COMMAND)
-    if r.ImGui_Button(ctx, "Copy command") then
-        r.ImGui_SetClipboardText(ctx, SceneDetect.INSTALL_COMMAND)
-    end
-    r.ImGui_Spacing(ctx)
-    r.ImGui_TextWrapped(ctx, "If REAPER still cannot find it afterwards, restart REAPER - it only picks up newly installed programs when it starts.")
-    r.ImGui_Separator(ctx)
-    if r.ImGui_Button(ctx, "Close", 120, 0) then
+    r.ImGui_SameLine(ctx)
+    if r.ImGui_Button(ctx, "Close") then
         r.ImGui_CloseCurrentPopup(ctx)
     end
     r.ImGui_EndPopup(ctx)
