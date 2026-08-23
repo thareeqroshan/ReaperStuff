@@ -1,13 +1,13 @@
 --[[
  * ReaScript Name: Video Scene Detect
- * Description: Configure scene detection (markers/regions, detector, threshold, colour, ...) then run it on the selected video item.
+ * Description: Configure scene detection (markers/regions, detector, threshold, colour, ...) then run it on the selected video items.
  * Author: tRoshan
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.4.2
+ * Version: 1.5
  * Provides: Functions/SceneDetect.lua
- * Changelog: Show a Detecting message before the scan starts, so it no longer looks like REAPER has hung
+ * Changelog: Detect scenes across every selected video item instead of only the first
 --]]
 
 local info = debug.getinfo(1, 'S')
@@ -159,11 +159,14 @@ local function drawControls()
         drawInstallHelp()
         return
     end
-    local item, sourceOrErr, videoPath = SceneDetect.getSelectedVideo()
-    if item then
-        r.ImGui_Text(ctx, "Selected: " .. (videoPath:match("[^/\\]+$") or videoPath))
+    local videos = SceneDetect.getSelectedVideos()
+    if #videos == 1 then
+        local path = SceneDetect.videoPath(videos[1])
+        r.ImGui_Text(ctx, "Selected: " .. (path:match("[^/\\]+$") or path))
+    elseif #videos > 1 then
+        r.ImGui_Text(ctx, "Selected: " .. #videos .. " video items")
     else
-        r.ImGui_TextColored(ctx, 0xE06060FF, sourceOrErr)
+        r.ImGui_TextColored(ctx, 0xE06060FF, "Select a video item.")
     end
     r.ImGui_Separator(ctx)
 
@@ -216,7 +219,7 @@ local function drawControls()
     r.ImGui_Separator(ctx)
 
     -- Captured before the button: setting pendingDetect below would otherwise unbalance BeginDisabled.
-    local disabled = not item or pendingDetect
+    local disabled = #videos == 0 or pendingDetect
     if disabled then
         r.ImGui_BeginDisabled(ctx)
     end
@@ -237,15 +240,18 @@ end
 
 local function runPendingDetect()
     pendingDetect = false
-    local count, detectErr, reason = SceneDetect.detect(opts)
+    local count, message, reason = SceneDetect.detect(opts)
     if count then
         status = string.format("Created %d %s.", count, opts.output)
+        if message then
+            status = status .. " " .. message
+        end
     elseif reason == SceneDetect.ERR_NOT_INSTALLED then
         r.DeleteExtState(EXT_SECTION, "cliFound", true)
         cliInstalled = false
         status = ""
     else
-        status = detectErr
+        status = message
     end
 end
 

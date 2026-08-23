@@ -93,7 +93,7 @@ local function deleteScenesInRange(prefix, rangeStart, rangeEnd)
 end
 
 -- Create one marker or region per scene, clipped to the target range.
-local function createFromScenes(scenes, options, rangeStart, rangeEnd)
+local function createFromScenes(scenes, options, rangeStart, rangeEnd, numberOffset)
     local wantRegion = options.output == M.OUTPUT_REGIONS
     local created = 0
     for _, scene in ipairs(scenes) do
@@ -103,7 +103,7 @@ local function createFromScenes(scenes, options, rangeStart, rangeEnd)
             local endPos = math.min(scene.endPos, rangeEnd)
             if endPos > startPos + EPSILON then
                 created = created + 1
-                local name = options.namePrefix .. created
+                local name = options.namePrefix .. (numberOffset + created)
                 if wantRegion then
                     r.AddProjectMarker2(0, true, startPos, endPos, name, -1, options.color)
                 else
@@ -128,44 +128,37 @@ function M.defaultOptions()
     }
 end
 
--- Returns item, source, videoPath, or nil + errorMessage.
-function M.getSelectedVideo()
-    local item = r.GetSelectedMediaItem(0, 0)
-    if not item then
-        return nil, "No media item selected."
+-- Every selected item whose active take is a video, in project order.
+function M.getSelectedVideos()
+    local items = {}
+    for i = 0, r.CountSelectedMediaItems(0) - 1 do
+        local item = r.GetSelectedMediaItem(0, i)
+        local take = r.GetActiveTake(item)
+        if take and r.GetMediaSourceType(r.GetMediaItemTake_Source(take), "") == "VIDEO" then
+            items[#items + 1] = item
+        end
     end
+    return items
+end
+
+function M.videoPath(item)
     local take = r.GetActiveTake(item)
-    if not take then
-        return nil, "The selected item has no active take."
-    end
-    local source = r.GetMediaItemTake_Source(take)
-    if r.GetMediaSourceType(source, "") ~= "VIDEO" then
-        return nil, "The selected item's active take is not a video source."
-    end
-    return item, source, r.GetMediaSourceFileName(source, "")
+    return r.GetMediaSourceFileName(r.GetMediaItemTake_Source(take), "")
 end
 
 function M.isAvailable()
     return exec("scenedetect version") ~= nil
 end
 
--- Detect scenes for the selected video item and create markers/regions.
--- Returns createdCount, or nil + errorMessage.
-function M.detect(options)
-    local item, sourceOrErr, videoPath = M.getSelectedVideo()
-    if not item then
-        return nil, sourceOrErr
-    end
-    if not M.isAvailable() then
-        return nil, 'Could not run "scenedetect". Install it from ' .. M.DOWNLOAD_URL ..
-            ' or, with Python installed, run: ' .. M.INSTALL_COMMAND, M.ERR_NOT_INSTALLED
-    end
-
+-- Scan one item and map its scenes into project time.
+-- Returns a job, nil to skip the item, or nil + errorMessage.
+local function scanItem(item, options)
+    local take = r.GetActiveTake(item)
+    local videoPath = M.videoPath(item)
     local itemStart = r.GetMediaItemInfo_Value(item, "D_POSITION")
     local itemEnd = itemStart + r.GetMediaItemInfo_Value(item, "D_LENGTH")
 
     -- scenedetect reports positions inside the source file, so the take's trim and rate must be undone.
-    local take = r.GetActiveTake(item)
     local startOffset = r.GetMediaItemTakeInfo_Value(take, "D_STARTOFFS")
     local playRate = r.GetMediaItemTakeInfo_Value(take, "D_PLAYRATE")
 
@@ -173,19 +166,18 @@ function M.detect(options)
     if options.useTimeSelection then
         local selStart, selEnd = r.GetSet_LoopTimeRange(false, false, 0, 0, false)
         if selEnd <= selStart then
-            return nil, "No time selection. Make one over the item, or turn that option off."
+            return nil, "No time selection. Make one over the items, or turn that option off."
         end
         rangeStart = math.max(itemStart, selStart)
         rangeEnd = math.min(itemEnd, selEnd)
         if rangeEnd <= rangeStart then
-            return nil, "The time selection does not overlap the selected item."
+            return nil -- outside the time selection, not an error when several items are selected
         end
     end
 
     local separator = package.config:sub(1, 1)
     local outputDir = os.getenv("TEMP") or os.getenv("TMPDIR") or r.GetProjectPath("")
-    local name = baseName(videoPath)
-    local csvPath = outputDir .. separator .. name .. "-Scenes.csv"
+    local csvPath = outputDir .. separator .. baseName(videoPath) .. "-Scenes.csv"
 
     -- Scan only the stretch of the source the item uses. Seeking does not rebase the reported
     -- timestamps, so they stay absolute and the mapping above still holds.
@@ -219,9 +211,6 @@ function M.detect(options)
     if not scenes then
         return nil, "Could not read the scene list at:\n    " .. csvPath
     end
-    if #scenes == 0 then
-        return nil, "No scenes were detected."
-    end
 
     for _, scene in ipairs(scenes) do
         if scene.startSeconds and scene.endSeconds then
@@ -230,16 +219,61 @@ function M.detect(options)
         end
     end
 
+    return {rangeStart = rangeStart, rangeEnd = rangeEnd, scenes = scenes}
+end
+
+-- Detect scenes for every selected video item and create markers/regions.
+-- Returns createdCount plus an optional note, or nil + errorMessage.
+function M.detect(options)
+    local items = M.getSelectedVideos()
+    if #items == 0 then
+        return nil, "Select at least one video item."
+    end
+    if not M.isAvailable() then
+        return nil, 'Could not run "scenedetect". Install it from ' .. M.DOWNLOAD_URL ..
+            ' or, with Python installed, run: ' .. M.INSTALL_COMMAND, M.ERR_NOT_INSTALLED
+    end
+
+    -- Scan everything up front: clearing one item's range must not delete scenes already
+    -- created for an item that overlaps it.
+    local jobs = {}
+    local failed = 0
+    local firstError
+    for _, item in ipairs(items) do
+        local job, err = scanItem(item, options)
+        if job then
+            jobs[#jobs + 1] = job
+        elseif err then
+            failed = failed + 1
+            firstError = firstError or err
+        end
+    end
+
+    if #jobs == 0 then
+        return nil, firstError or "The time selection does not overlap any selected item."
+    end
+
     r.Undo_BeginBlock()
     r.PreventUIRefresh(1)
     if options.clearExisting then
-        deleteScenesInRange(options.namePrefix, rangeStart, rangeEnd)
+        for _, job in ipairs(jobs) do
+            deleteScenesInRange(options.namePrefix, job.rangeStart, job.rangeEnd)
+        end
     end
-    local created = createFromScenes(scenes, options, rangeStart, rangeEnd)
+    local created = 0
+    for _, job in ipairs(jobs) do
+        created = created + createFromScenes(job.scenes, options, job.rangeStart, job.rangeEnd, created)
+    end
     r.PreventUIRefresh(-1)
     r.UpdateArrange()
     r.Undo_EndBlock("Video Scene Detect: create " .. created .. " " .. options.output, -1)
 
+    if created == 0 then
+        return nil, "No scenes were detected."
+    end
+    if failed > 0 then
+        return created, string.format("%d of %d clips failed: %s", failed, #items, firstError)
+    end
     return created
 end
 
