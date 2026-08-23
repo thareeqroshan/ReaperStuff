@@ -92,21 +92,19 @@ end
 local function createFromScenes(scenes, options, rangeStart, rangeEnd)
     local wantRegion = options.output == M.OUTPUT_REGIONS
     local created = 0
-    for index, scene in ipairs(scenes) do
+    for _, scene in ipairs(scenes) do
         if scene.startPos then
-            local startPos = scene.startPos
-            if startPos >= rangeStart - EPSILON and startPos < rangeEnd then
-                local name = options.namePrefix .. index
+            -- Clamp rather than skip, so a trim landing mid-scene still yields a scene for what is visible.
+            local startPos = math.max(scene.startPos, rangeStart)
+            local endPos = math.min(scene.endPos, rangeEnd)
+            if endPos > startPos + EPSILON then
+                created = created + 1
+                local name = options.namePrefix .. created
                 if wantRegion then
-                    local endPos = scene.endPos
-                    if endPos > rangeEnd then
-                        endPos = rangeEnd
-                    end
                     r.AddProjectMarker2(0, true, startPos, endPos, name, -1, options.color)
                 else
                     r.AddProjectMarker2(0, false, startPos, 0, name, -1, options.color)
                 end
-                created = created + 1
             end
         end
     end

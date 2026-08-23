@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.3
+ * Version: 1.4
  * Provides: Functions/SceneDetect.lua
- * Changelog: Fix marker and region positions on trimmed or rate-changed items
+ * Changelog: Keep the part-scene at a trim point and number scenes from 1 each run
 --]]
 
 local info = debug.getinfo(1, 'S')
