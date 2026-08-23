@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="21eee0fe1c40de000e1cec826cc6134784fa13fd">
+<index version="1" name="tRoshan Scripts" commit="1c32bdd84c4885510e6bc24b7af60deaa62c3579">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -97,6 +97,11 @@
         <changelog><![CDATA[Only scan the part of the video the item actually uses, which is much faster on long source files]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/21eee0fe1c40de000e1cec826cc6134784fa13fd/ReaScripts/tRoshan%20Video%20Scene%20Detect%20GUI.lua</source>
         <source file="Functions/SceneDetect.lua">https://github.com/thareeqroshan/ReaperStuff/raw/21eee0fe1c40de000e1cec826cc6134784fa13fd/ReaScripts/Functions/SceneDetect.lua</source>
+      </version>
+      <version name="1.4.2" author="tRoshan" time="2026-08-23T18:49:30Z">
+        <changelog><![CDATA[Show a Detecting message before the scan starts, so it no longer looks like REAPER has hung]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/1c32bdd84c4885510e6bc24b7af60deaa62c3579/ReaScripts/tRoshan%20Video%20Scene%20Detect%20GUI.lua</source>
+        <source file="Functions/SceneDetect.lua">https://github.com/thareeqroshan/ReaperStuff/raw/1c32bdd84c4885510e6bc24b7af60deaa62c3579/ReaScripts/Functions/SceneDetect.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Copy FX parameters from the last focused FX">
