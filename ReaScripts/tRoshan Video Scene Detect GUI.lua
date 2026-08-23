@@ -5,9 +5,9 @@
  * License: GPL v3
  * REAPER: 7.x
  * Extensions: ReaImGui; requires the `scenedetect` CLI on PATH (https://www.scenedetect.com/download/, or pip install --upgrade scenedetect).
- * Version: 1.4
+ * Version: 1.4.1
  * Provides: Functions/SceneDetect.lua
- * Changelog: Keep the part-scene at a trim point and number scenes from 1 each run
+ * Changelog: Only scan the part of the video the item actually uses, which is much faster on long source files
 --]]
 
 local info = debug.getinfo(1, 'S')

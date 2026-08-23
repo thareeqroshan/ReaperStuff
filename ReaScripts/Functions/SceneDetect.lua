@@ -27,6 +27,10 @@ local function quote(path)
     return '"' .. path .. '"'
 end
 
+local function timeArg(seconds)
+    return string.format("%.3f", seconds) .. "s"
+end
+
 -- Run a command line. Returns exitCode, output, or nil if the process could not be started.
 local function exec(command)
     local result = r.ExecProcess(command, 0)
@@ -183,7 +187,14 @@ function M.detect(options)
     local name = baseName(videoPath)
     local csvPath = outputDir .. separator .. name .. "-Scenes.csv"
 
-    local parts = {"scenedetect", "-i", quote(videoPath), "-o", quote(outputDir), options.detector}
+    -- Scan only the stretch of the source the item uses. Seeking does not rebase the reported
+    -- timestamps, so they stay absolute and the mapping above still holds.
+    local sourceStart = math.max(0, startOffset + (rangeStart - itemStart) * playRate)
+    local sourceEnd = startOffset + (rangeEnd - itemStart) * playRate
+
+    local parts = {"scenedetect", "-i", quote(videoPath), "-o", quote(outputDir),
+                   "time", "-s", timeArg(sourceStart), "-e", timeArg(sourceEnd),
+                   options.detector}
     if options.threshold and options.threshold >= 0 then
         parts[#parts + 1] = "-t"
         parts[#parts + 1] = tostring(options.threshold)
