@@ -19,6 +19,7 @@ Then install what you want from **Extensions > ReaPack > Browse packages**.
 | Package | What it does |
 | --- | --- |
 | Track Navigation | Eight actions to select, extend and shrink the track selection, skipping hidden tracks |
+| Select only direct children | Replaces the track selection with the immediate children of the selected tracks |
 | Video Scene Detect | Detects scene cuts in the selected video item and creates markers or regions |
 | Create New Sound | Sets up an sfx session for game audio |
 | Randomise Take Files by Group | Groups selected items by asset name and swaps the active take source |
