@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="4262a9d5a9b8ae0b11802cfbd0de2504bdf6cb2b">
+<index version="1" name="tRoshan Scripts" commit="c09e17244a04c0c7a793eb6bfc1679734fceda7a">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -118,11 +118,21 @@
       <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
       </version>
+      <version name="1.1" author="tRoshan" time="2026-09-28T23:26:50Z">
+        <changelog><![CDATA[+ Resolve track, master, and take FX without accessing the wrong chain
++ Preserve the clipboard on failure and record plug-in identity and parameter layout]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/91c316593609cc0ed8b2285773a6fc821cdb2d54/ReaScripts/tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua</source>
+      </version>
     </reapack>
     <reapack name="tRoshan_Create_Folder_From_Selected_Tracks.lua" type="script" desc="Create Folder From Selected Tracks">
       <version name="1.0" author="tRoshan" time="2024-02-16T08:37:47Z">
         <changelog><![CDATA[+ Initial Release]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/b5d8bc80d7e0fd3620e380fa1f77058504b99e04/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
+      </version>
+      <version name="1.1" author="tRoshan" time="2026-09-28T23:26:50Z">
+        <changelog><![CDATA[+ Preserve nested folders and existing closing depths when adding a parent
++ Include selected folders' subtrees and reject unsafe selection gaps or parent crossings]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/91c316593609cc0ed8b2285773a6fc821cdb2d54/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan_Item_Properties_Randomizer.lua" type="script" desc="Item Properties Randomizer">
@@ -134,6 +144,11 @@
     <reapack name="tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua" type="script" desc="Paste FX parameters to the last focused FX">
       <version name="1.0" author="tRoshan" time="2021-05-16T03:38:19Z">
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/735ed68c1b1856c79663cca48bdcd14af629f4fd/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
+      </version>
+      <version name="1.1" author="tRoshan" time="2026-09-28T23:26:50Z">
+        <changelog><![CDATA[+ Resolve track, master, and take FX without accessing the wrong chain
++ Validate clipboard identity and parameter layout before writing; report failures accurately]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/91c316593609cc0ed8b2285773a6fc821cdb2d54/ReaScripts/tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan_Randomise_Take_Files_By_Group.lua" type="script" desc="Randomise Take Files by Group">
