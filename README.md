@@ -24,6 +24,7 @@ Then install what you want from **Extensions > ReaPack > Browse packages**.
 | Create New Sound | Sets up an sfx session for game audio |
 | Randomise Take Files by Group | Groups selected items by asset name and swaps the active take source |
 | Item Properties Randomizer | Randomises properties across the selected items |
+| Rename Selected Regions | Batch renames selected regions with prefix, suffix, literal find/replace, full-name replacement, numbering, and a live preview |
 | Create Folder From Selected Tracks | Wraps the selected tracks in a folder |
 | Copy FX parameters from the last focused FX | Copies the last focused FX's parameters |
 | Paste FX parameters to the last focused FX | Applies previously copied parameters to the last focused FX |
@@ -35,7 +36,7 @@ REAPER 7. Most scripts need nothing else — these are the exceptions:
 
 | Requirement | Needed by |
 | --- | --- |
-| [ReaImGui](https://github.com/cfillion/reaimgui) | Video Scene Detect, Randomise Take Files by Group, Item Properties Randomizer |
+| [ReaImGui](https://github.com/cfillion/reaimgui) | Video Scene Detect, Randomise Take Files by Group, Item Properties Randomizer, Rename Selected Regions |
 | [PySceneDetect](https://www.scenedetect.com/) ([CLI reference](https://www.scenedetect.com/cli/)) | Video Scene Detect |
 | js_ReaScriptAPI *(optional)* | Track Navigation, only for scroll-into-view |
 
@@ -71,6 +72,23 @@ Update both actions to version 1.1 or later and make a fresh copy after upgradin
 clipboard contents lack the metadata needed for safe compatibility checks. The actions
 remain independently installable ReaPack packages with no shared helper dependency, and the
 clipboard lasts only for the current REAPER session.
+
+## Rename Selected Regions
+
+Requires a recent REAPER build exposing the native region selection APIs
+(`GetRegionOrMarker`, `GetRegionOrMarkerInfo_Value`, and `GetSetRegionOrMarkerInfo_String`).
+Older builds show an update prompt instead of renaming a different selection.
+
+Select regions in REAPER, run **tRoshan_Rename_Selected_Regions.lua**, review the preview,
+then click **Apply**. The preview follows the current region selection in the active project;
+markers and unselected regions are never renamed. A time selection alone does not select regions.
+
+Operations run in this order: optional full-name replacement, case-sensitive literal find/replace,
+prefix, optional numbering, suffix. An empty Find field skips replacement; an empty Replace with
+field removes matches. Numbering follows timeline order (internal order breaks ties), with a
+configurable start, minimum digit count, and separator. Blank resulting names are allowed.
+Each Apply is one undo step. Apply again to repeat the operations on the current names;
+Reset clears the controls without changing region names. Region IDs, positions, and colours stay intact.
 
 ## Development
 
