@@ -711,5 +711,129 @@ test("FX: rollback failure is explicitly reported", function()
     equal(state.undoEnds, 1)
 end)
 
+local function regionsMock()
+    local state = baseMock()
+    local reaper = state.reaper
+    local parent = {name = 'Folder'}
+    local track = {name = 'Child', parent = parent}
+    state.master = {name = 'MASTER'}
+    state.items = {
+        {track = track, take = {name = 'Late take'}, position = 8, length = 2, selected = true},
+        {track = {name = 'Top level'}, take = {name = 'Early take'}, position = 1, length = 3, selected = true},
+        {track = track, take = {name = 'Ignored'}, position = 0, length = 1, selected = false},
+    }
+    state.controls, state.created, state.routes = {}, {}, {}
+    local disabled = false
+    reaper.EnumProjects = function() return 'project' end
+    reaper.CountMediaItems = function() return #state.items end
+    reaper.GetMediaItem = function(_, index) return state.items[index + 1] end
+    reaper.IsMediaItemSelected = function(item) return item.selected end
+    reaper.GetMediaItemTrack = function(item) return item.track end
+    reaper.GetTrackName = function(track) return true, track.name end
+    reaper.GetActiveTake = function(item) return item.take end
+    reaper.GetTakeName = function(take) return take.name end
+    reaper.GetParentTrack = function(track) return track.parent end
+    reaper.GetMasterTrack = function() return state.master end
+    reaper.GetMediaItemInfo_Value = function(item, key)
+        if key == 'D_POSITION' then return item.position end
+        equal(key, 'D_LENGTH')
+        return item.length
+    end
+    reaper.ColorToNative = function(red, green, blue)
+        state.rgb = {red, green, blue}
+        return 0x123456
+    end
+    reaper.AddProjectMarker2 = function(project, region, position, ending, name, number, colour)
+        equal(project, 'project')
+        equal(region, true)
+        equal(number, -1)
+        if state.failCreate then return -1 end
+        local id = 100 + #state.created
+        state.created[#state.created + 1] = {id = id, position = position, ending = ending, name = name, colour = colour}
+        return id
+    end
+    reaper.SetRegionRenderMatrix = function(project, id, track, flag)
+        equal(project, 'project')
+        equal(flag, 1)
+        state.routes[id] = track
+    end
+    reaper.Undo_BeginBlock2 = reaper.Undo_BeginBlock
+    reaper.Undo_EndBlock2 = reaper.Undo_EndBlock
+    reaper.UpdateTimeline = function() end
+    reaper.defer = function(callback) state.pending = callback end
+    reaper.ImGui_CreateContext = function() return 'context' end
+    reaper.ImGui_Begin = function() return true, true end
+    reaper.ImGui_Combo = function(_, label, value) return true, state.controls[label] or value end
+    reaper.ImGui_ColorEdit3 = function(_, label, value) return true, state.controls[label] or value end
+    reaper.ImGui_BeginTable = function() return false end
+    reaper.ImGui_BeginDisabled = function(_, value) disabled = value end
+    reaper.ImGui_EndDisabled = function() disabled = false end
+    reaper.ImGui_Button = function(_, label) return label == 'Create regions' and not disabled end
+    for _, name in ipairs({'ImGui_SetNextWindowSize', 'ImGui_Text', 'ImGui_TextWrapped', 'ImGui_SameLine', 'ImGui_End'}) do
+        reaper[name] = function() end
+    end
+    for _, name in ipairs({'ImGui_Cond_FirstUseEver', 'ImGui_ColorEditFlags_NoInputs', 'ImGui_TableFlags_Borders', 'ImGui_TableFlags_RowBg', 'ImGui_TableFlags_Resizable', 'ImGui_TableFlags_ScrollY'}) do
+        reaper[name] = function() return 0 end
+    end
+    local environment = setmetatable({reaper = reaper}, {__index = _G})
+    assert(loadfile('ReaScripts' .. separator .. 'tRoshan_Create_Regions_From_Selected_Items.lua', 't', environment))()
+    return state
+end
+
+test('Regions: take names, exact bounds, colour, item routing and batch undo', function()
+    local state = regionsMock()
+    state.controls.Colour = 0xA1B2C3
+    state.pending()
+    equal(#state.created, 2)
+    equal(state.created[1].name, 'Early take')
+    equal(state.created[1].position, 1)
+    equal(state.created[1].ending, 4)
+    equal(state.created[2].name, 'Late take')
+    equal(state.created[2].position, 8)
+    equal(state.created[2].ending, 10)
+    equal(state.created[1].colour, 0x1123456)
+    equal(state.rgb[1], 0xA1)
+    equal(state.rgb[2], 0xB2)
+    equal(state.rgb[3], 0xC3)
+    equal(state.routes[100], state.items[2].track)
+    equal(state.routes[101], state.items[1].track)
+    equal(state.undoBegins, 1)
+    equal(state.undoEnds, 1)
+    equal(state.undo, 0)
+end)
+
+test('Regions: track names and immediate parent or Master routing', function()
+    local state = regionsMock()
+    state.controls['Region name'], state.controls['Render routing'] = 1, 1
+    state.items[1].take = nil
+    state.pending()
+    equal(state.created[1].name, 'Top level')
+    equal(state.created[2].name, 'Child')
+    equal(state.routes[100], state.master)
+    equal(state.routes[101], state.items[1].track.parent)
+end)
+
+test('Regions: empty selection and invalid items do not mutate the project', function()
+    for _, scenario in ipairs({'empty', 'take', 'length'}) do
+        local state = regionsMock()
+        if scenario == 'empty' then state.items = {} end
+        if scenario == 'take' then state.items[1].take = nil end
+        if scenario == 'length' then state.items[1].length = 0 end
+        state.pending()
+        equal(#state.created, 0)
+        equal(state.undoBegins, 0)
+    end
+end)
+
+test('Regions: creation failure reports the error and closes the undo block', function()
+    local state = regionsMock()
+    state.failCreate = true
+    state.pending()
+    equal(#state.created, 0)
+    equal(state.undoBegins, 1)
+    equal(state.undoEnds, 1)
+    lastMessage(state, 'Could not create region')
+end)
+
 print(string.format("\n%d passed, %d failed", passed, failed))
 if failed > 0 then os.exit(1) end
