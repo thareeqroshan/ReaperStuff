@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="65e4b7561a450d727c23d74e91e000cd1d2e2906">
+<index version="1" name="tRoshan Scripts" commit="fa863d8ca10ae312aa6cd03ddc0b6a28af4a0582">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -133,6 +133,12 @@
         <changelog><![CDATA[+ Preserve nested folders and existing closing depths when adding a parent
 + Include selected folders' subtrees and reject unsafe selection gaps or parent crossings]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/91c316593609cc0ed8b2285773a6fc821cdb2d54/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Create_Regions_From_Selected_Items.lua" type="script" desc="Create Regions From Selected Items">
+      <version name="1.0" author="tRoshan" time="2026-11-04T10:35:53Z">
+        <changelog><![CDATA[+ Initial release]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/fa863d8ca10ae312aa6cd03ddc0b6a28af4a0582/ReaScripts/tRoshan_Create_Regions_From_Selected_Items.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan_Item_Properties_Randomizer.lua" type="script" desc="Item Properties Randomizer">
