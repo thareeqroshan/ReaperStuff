@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="c09e17244a04c0c7a793eb6bfc1679734fceda7a">
+<index version="1" name="tRoshan Scripts" commit="65e4b7561a450d727c23d74e91e000cd1d2e2906">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -155,6 +155,12 @@
       <version name="1.0" author="tRoshan" time="2026-08-06T13:06:23Z">
         <changelog><![CDATA[+ Initial Release]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/c6b86ced32174a66049977cfd33737f97da4e0a3/ReaScripts/tRoshan_Randomise_Take_Files_By_Group.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Rename_Selected_Regions.lua" type="script" desc="Rename Selected Regions">
+      <version name="1.0" author="tRoshan" time="2026-11-04T10:23:53Z">
+        <changelog><![CDATA[+ Initial release]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/65e4b7561a450d727c23d74e91e000cd1d2e2906/ReaScripts/tRoshan_Rename_Selected_Regions.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan_Select only direct children.lua" type="script" desc="Select only direct children">
