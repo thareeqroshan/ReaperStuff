@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="b8b05948303ff0680d4f151b516a1a566fefd08f">
+<index version="1" name="tRoshan Scripts" commit="31e3df3f1622abdb6687476528c09595f0552aa9">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -133,6 +133,12 @@
         <changelog><![CDATA[+ Preserve nested folders and existing closing depths when adding a parent
 + Include selected folders' subtrees and reject unsafe selection gaps or parent crossings]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/91c316593609cc0ed8b2285773a6fc821cdb2d54/ReaScripts/tRoshan_Create_Folder_From_Selected_Tracks.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Create_Four_Child_Tracks.lua" type="script" desc="Create Four Child Tracks">
+      <version name="1.0" author="tRoshan" time="2026-11-05T13:16:56Z">
+        <changelog><![CDATA[+ Initial release]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/31e3df3f1622abdb6687476528c09595f0552aa9/ReaScripts/tRoshan_Create_Four_Child_Tracks.lua</source>
       </version>
     </reapack>
     <reapack name="tRoshan_Create_Regions_From_Selected_Items.lua" type="script" desc="Create Regions From Selected Items">
