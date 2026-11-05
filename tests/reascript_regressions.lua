@@ -5,7 +5,8 @@ local separator = package.config:sub(1, 1)
 local scripts = {
     folder = "tRoshan_Create_Folder_From_Selected_Tracks.lua",
     copy = "tRoshan_Copy_Fx_Parameters_from_last_focused_FX.lua",
-    paste = "tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua"
+    paste = "tRoshan_Paste_Fx_Parameters_from_last_focused_FX.lua",
+    space = "tRoshan_Space_Selected_Items.lua"
 }
 
 local passed, failed = 0, 0
@@ -833,6 +834,159 @@ test('Regions: creation failure reports the error and closes the undo block', fu
     equal(state.undoBegins, 1)
     equal(state.undoEnds, 1)
     lastMessage(state, 'Could not create region')
+end)
+
+local function spacingMock()
+    local state = baseMock()
+    local reaper = state.reaper
+    state.items = {
+        {track = 'Track 1', position = 30, length = 2, selected = true},
+        {track = 'Track 2', position = 5, length = 3, selected = true},
+        {track = 'Track 2', position = 12, length = 4, selected = true},
+        {track = 'Track 1', position = 0, length = 8, selected = false},
+    }
+    state.gap, state.prompts, state.updates, state.writes = '1.5', 0, 0, {}
+    local function selectedItems()
+        local items = {}
+        for _, item in ipairs(state.items) do
+            if item.selected then items[#items + 1] = item end
+        end
+        return items
+    end
+    reaper.EnumProjects = function() return 'project' end
+    reaper.CountSelectedMediaItems = function(project)
+        equal(project, 'project')
+        return #selectedItems()
+    end
+    reaper.GetSelectedMediaItem = function(project, index)
+        equal(project, 'project')
+        equal(#state.writes, 0, 'Snapshot the selection before moving items')
+        return selectedItems()[index + 1]
+    end
+    reaper.GetMediaItemInfo_Value = function(item, key)
+        if key == 'D_POSITION' then return item.position end
+        equal(key, 'D_LENGTH')
+        return item.length
+    end
+    reaper.GetUserInputs = function(_, fields)
+        equal(fields, 1)
+        state.prompts = state.prompts + 1
+        return not state.cancel, state.gap
+    end
+    reaper.SetMediaItemPosition = function(item, position, refresh)
+        equal(refresh, false)
+        equal(state.refresh, 1, 'Suspend UI refresh during the batch')
+        equal(state.undo, 1, 'Move items inside one undo block')
+        state.writes[#state.writes + 1] = item
+        if #state.writes == state.failWrite then return false end
+        item.position = position
+        return true
+    end
+    reaper.Undo_BeginBlock2 = reaper.Undo_BeginBlock
+    reaper.Undo_EndBlock2 = reaper.Undo_EndBlock
+    reaper.UpdateArrange = function() state.updates = state.updates + 1 end
+    return state
+end
+
+test('Spacing: timeline order across tracks keeps the earliest item and other properties intact', function()
+    local state = spacingMock()
+    local originals = {}
+    for index, item in ipairs(state.items) do originals[index] = copyTable(item) end
+    runAction(state, 'space')
+    equal(state.items[2].position, 5, 'Earliest item stays in place')
+    equal(state.items[3].position, 9.5)
+    equal(state.items[1].position, 15)
+    equal(state.items[4].position, 0, 'Unselected item stays in place')
+    equal(#state.writes, 2)
+    equal(state.writes[1], state.items[3])
+    equal(state.writes[2], state.items[1])
+    for index, item in ipairs(state.items) do
+        equal(item.track, originals[index].track)
+        equal(item.length, originals[index].length)
+        equal(item.selected, originals[index].selected)
+    end
+    equal(state.undoBegins, 1)
+    equal(state.undoEnds, 1)
+    equal(state.updates, 1)
+    equal(#state.messages, 0)
+end)
+
+test('Spacing: tied start times preserve REAPER item order', function()
+    local state = spacingMock()
+    state.gap = '0.5'
+    for _, item in ipairs(state.items) do
+        if item.selected then item.position = 5 end
+    end
+    runAction(state, 'space')
+    equal(state.items[1].position, 5)
+    equal(state.items[2].position, 7.5)
+    equal(state.items[3].position, 11)
+end)
+
+test('Spacing: zero gap places items end to end', function()
+    local state = spacingMock()
+    state.gap = '0'
+    runAction(state, 'space')
+    equal(state.items[2].position, 5)
+    equal(state.items[3].position, 8)
+    equal(state.items[1].position, 12)
+end)
+
+test('Spacing: fractional item lengths and gaps stay in seconds', function()
+    local state = spacingMock()
+    state.gap = '0.125'
+    state.items[2].length, state.items[3].length = 0.25, 0.125
+    runAction(state, 'space')
+    equal(state.items[3].position, 5.375)
+    equal(state.items[1].position, 5.625)
+end)
+
+test('Spacing: cancelling does not change the project', function()
+    local state = spacingMock()
+    state.cancel = true
+    runAction(state, 'space')
+    equal(#state.writes, 0)
+    equal(state.undoBegins, 0)
+    equal(state.updates, 0)
+    equal(#state.messages, 0)
+end)
+
+test('Spacing: fewer than two selected items do not prompt or change the project', function()
+    for count = 0, 1 do
+        local state = spacingMock()
+        for index, item in ipairs(state.items) do item.selected = index <= count end
+        runAction(state, 'space')
+        equal(state.prompts, 0)
+        equal(#state.writes, 0)
+        equal(state.undoBegins, 0)
+        lastMessage(state, 'at least two')
+    end
+end)
+
+for _, input in ipairs({'', 'invalid', '-1', '1e999', '-1e999', 'nan'}) do
+    test('Spacing: invalid gap "' .. input .. '" does not change the project', function()
+        local state = spacingMock()
+        state.gap = input
+        runAction(state, 'space')
+        equal(#state.writes, 0)
+        equal(state.undoBegins, 0)
+        equal(state.updates, 0)
+        lastMessage(state, 'finite number')
+    end)
+end
+
+test('Spacing: failed move balances undo and UI refresh and tells the user to undo', function()
+    local state = spacingMock()
+    state.failWrite = 2
+    runAction(state, 'space')
+    equal(state.items[2].position, 5)
+    equal(state.items[3].position, 9.5)
+    equal(state.items[1].position, 30)
+    equal(state.undoBegins, 1)
+    equal(state.undoEnds, 1)
+    equal(state.updates, 1)
+    lastMessage(state, 'Could not reposition')
+    lastMessage(state, 'Undo to revert')
 end)
 
 print(string.format("\n%d passed, %d failed", passed, failed))
