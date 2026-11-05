@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="tRoshan Scripts" commit="fa863d8ca10ae312aa6cd03ddc0b6a28af4a0582">
+<index version="1" name="tRoshan Scripts" commit="b8b05948303ff0680d4f151b516a1a566fefd08f">
   <category name="ReaScripts">
     <reapack name="tRoshan Create New Sound.lua" type="script" desc="Create New Sound">
       <version name="1.0" author="tRoshan" time="2024-02-16T07:00:16Z">
@@ -173,6 +173,12 @@
       <version name="1.0" author="tRoshan" time="2026-08-26T07:11:50Z">
         <changelog><![CDATA[+ Initial Release]]></changelog>
         <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/4262a9d5a9b8ae0b11802cfbd0de2504bdf6cb2b/ReaScripts/tRoshan_Select%20only%20direct%20children.lua</source>
+      </version>
+    </reapack>
+    <reapack name="tRoshan_Space_Selected_Items.lua" type="script" desc="Space Selected Items">
+      <version name="1.0" author="tRoshan" time="2026-11-05T13:07:10Z">
+        <changelog><![CDATA[+ Initial release]]></changelog>
+        <source main="main">https://github.com/thareeqroshan/ReaperStuff/raw/b8b05948303ff0680d4f151b516a1a566fefd08f/ReaScripts/tRoshan_Space_Selected_Items.lua</source>
       </version>
     </reapack>
   </category>
