@@ -27,6 +27,7 @@ Then install what you want from **Extensions > ReaPack > Browse packages**.
 | Rename Selected Regions | Batch renames selected regions with prefix, suffix, literal find/replace, full-name replacement, numbering, and a live preview |
 | Create Regions From Selected Items | Creates one region per selected item with take or track naming, a colour picker, and track or parent render routing |
 | Create Folder From Selected Tracks | Wraps the selected tracks in a folder |
+| Create Four Child Tracks | Turns each selected track into a folder with four new children and moves its media items to the first child |
 | Copy FX parameters from the last focused FX | Copies the last focused FX's parameters |
 | Paste FX parameters to the last focused FX | Applies previously copied parameters to the last focused FX |
 | Pan item 10 units to the left / right | Pans the selected items and shows the take pan envelope |
@@ -55,6 +56,17 @@ when the final selected track is itself a folder parent.
 Unselected sibling gaps, selections crossing an existing parent's boundary, and folders
 without a closing track are rejected with a message before anything changes. No tracks are
 moved, and unrelated tracks retain their existing folder membership.
+
+## Create Four Child Tracks
+
+Select one or more non-folder tracks and run **tRoshan_Create_Four_Child_Tracks.lua**.
+Each selected track becomes a folder with four new child tracks directly beneath it.
+Its media items move to the first child without changing their timeline positions;
+the other three children contain no media items. FX and track settings stay on the parent.
+
+If any selected track is already a folder, the entire action is rejected before anything
+changes. Existing surrounding folder boundaries are preserved, including when a selected
+track closes one or more folders. The entire batch is one undo step.
 
 ## FX parameter copy/paste
 
