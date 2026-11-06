@@ -4,6 +4,10 @@ on:
   pull_request:
   push:
     branches-ignore: [master]
+  schedule:
+    # GitHub evicts caches unused for 7 days. Running on master twice a week keeps the
+    # gem cache that the deploy workflow restores warm.
+    - cron: '23 4 * * 1,4'
 
 jobs:
   reapack-index:
@@ -14,12 +18,15 @@ jobs:
           # reapack-index reads package versions out of the git history, not the worktree.
           fetch-depth: 0
 
+      # Installs the gems pinned in Gemfile.lock and caches them. Compiling rugged (libgit2)
+      # takes over a minute, so only a cache miss pays for it; -j4 builds it on all cores.
       - uses: ruby/setup-ruby@v1
+        env:
+          MAKEFLAGS: -j4
         with:
-          ruby-version: '3.2'
+          ruby-version: '3.4'
+          bundler-cache: true
 
-      - name: Install reapack-index
-        run: gem install reapack-index --pre
-
+      # --check walks the whole worktree, including the gems that setup-ruby put in vendor/bundle.
       - name: Validate every package
-        run: reapack-index --check
+        run: bundle exec reapack-index --check --ignore vendor/bundle

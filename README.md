@@ -133,9 +133,15 @@ bundled that way needs `@noindex` so it isn't also published as a standalone pac
 To validate locally before pushing (optional, needs Ruby):
 
 ```
-gem install reapack-index
-reapack-index --check
+bundle install
+bundle exec reapack-index --check
 ```
+
+The workflows install reapack-index through Bundler from `Gemfile.lock` and cache the gems, because
+building `rugged` (libgit2) from source takes over a minute. Only a cache miss pays that cost: the first run
+after the lockfile, Ruby version or runner image changes, or after GitHub evicts a cache unused for 7 days
+(`check` also runs twice a week on `master` to keep it warm). To upgrade reapack-index, run
+`bundle update reapack-index` and commit the new `Gemfile.lock`.
 
 Focused folder, FX, and region regressions use a small mocked REAPER API and Lua 5.4, without opening
 or changing a live REAPER project. From the repository root on Windows, run:
