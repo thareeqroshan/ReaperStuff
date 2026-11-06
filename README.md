@@ -24,7 +24,7 @@ Then install what you want from **Extensions > ReaPack > Browse packages**.
 | Create New Sound | Sets up an sfx session for game audio |
 | Randomise Take Files by Group | Groups selected items by asset name and swaps the active take source |
 | Item Properties Randomizer | Randomises properties across the selected items |
-| Rename Selected Regions | Batch renames selected regions with prefix, suffix, literal find/replace, full-name replacement, numbering, and a live preview |
+| Rename Selected Regions | Includes region and track renaming actions with prefix, suffix, literal find/replace, full-name replacement, numbering, and a live preview |
 | Create Regions From Selected Items | Creates one region per selected item with take or track naming, a colour picker, and track or parent render routing |
 | Create Folder From Selected Tracks | Wraps the selected tracks in a folder |
 | Create Four Child Tracks | Turns each selected track into a folder with four new children and moves its media items to the first child |
@@ -38,7 +38,7 @@ REAPER 7. Most scripts need nothing else — these are the exceptions:
 
 | Requirement | Needed by |
 | --- | --- |
-| [ReaImGui](https://github.com/cfillion/reaimgui) | Video Scene Detect, Randomise Take Files by Group, Item Properties Randomizer, Rename Selected Regions, Create Regions From Selected Items |
+| [ReaImGui](https://github.com/cfillion/reaimgui) | Video Scene Detect, Randomise Take Files by Group, Item Properties Randomizer, Rename Selected Regions / Tracks, Create Regions From Selected Items |
 | [PySceneDetect](https://www.scenedetect.com/) ([CLI reference](https://www.scenedetect.com/cli/)) | Video Scene Detect |
 | js_ReaScriptAPI *(optional)* | Track Navigation, only for scroll-into-view |
 
@@ -86,9 +86,18 @@ clipboard contents lack the metadata needed for safe compatibility checks. The a
 remain independently installable ReaPack packages with no shared helper dependency, and the
 clipboard lasts only for the current REAPER session.
 
-## Rename Selected Regions
+## Rename Selected Regions and Tracks
 
-Requires a recent REAPER build exposing the native region selection APIs
+Install or update **Rename Selected Regions** through ReaPack. Version 1.1 also includes
+**Rename Selected Tracks** and the shared dialog helper; no separate package is required.
+Both actions use paired Find/Replace and Prefix/Suffix fields, optional numbering controls,
+and a preview that expands with the window. Unchanged preview names are dimmed.
+
+Select tracks and run **tRoshan_Rename_Selected_Tracks.lua** to rename them in top-to-bottom
+track order. Only selected regular tracks are renamed. Media items, FX, routing, and folder
+structure stay intact; the Master track is excluded.
+
+The region action requires a recent REAPER build exposing the native region selection APIs
 (`GetRegionOrMarker`, `GetRegionOrMarkerInfo_Value`, and `GetSetRegionOrMarkerInfo_String`).
 Older builds show an update prompt instead of renaming a different selection.
 
@@ -98,10 +107,12 @@ markers and unselected regions are never renamed. A time selection alone does no
 
 Operations run in this order: optional full-name replacement, case-sensitive literal find/replace,
 prefix, optional numbering, suffix. An empty Find field skips replacement; an empty Replace with
-field removes matches. Numbering follows timeline order (internal order breaks ties), with a
-configurable start, minimum digit count, and separator. Blank resulting names are allowed.
-Each Apply is one undo step. Apply again to repeat the operations on the current names;
-Reset clears the controls without changing region names. Region IDs, positions, and colours stay intact.
+field removes matches. Region numbering follows timeline order (internal order breaks ties);
+track numbering follows track order. Both have a configurable start, minimum digit count, and
+separator. Blank resulting names are allowed. Each Apply is one undo step. Apply again to
+repeat the operations on the current names; Reset clears the controls without changing names.
+The preview follows the current selection in the active project. Region IDs, positions, and
+colours stay intact.
 
 ## Create Regions From Selected Items
 
