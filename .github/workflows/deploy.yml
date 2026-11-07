@@ -43,3 +43,19 @@ jobs:
       # Pushes made with GITHUB_TOKEN do not retrigger workflows, so this cannot loop.
       - name: Push the updated index
         run: git push
+
+      # raw.githubusercontent.com caches index.xml for 5 minutes and ignores ReaPack's no-cache
+      # request, so syncing right after a push can return the old index. Release downloads are
+      # not cached that way: every upload gets a fresh download URL. This keeps a copy of the
+      # committed index at https://github.com/thareeqroshan/ReaperStuff/releases/download/index/index.xml
+      - name: Publish index.xml as a release download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view index >/dev/null 2>&1; then
+            gh release upload index index.xml --clobber
+          else
+            gh release create index index.xml --prerelease --title 'index.xml' \
+              --notes 'The latest index.xml, replaced on every push to master. ReaPack link: https://github.com/thareeqroshan/ReaperStuff/releases/download/index/index.xml'
+          fi

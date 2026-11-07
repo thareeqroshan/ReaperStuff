@@ -137,6 +137,11 @@ To release a change: edit the script, bump `* Version:` in its header, then comm
 (version, description, changelog, bundled files) all lives in the script headers — see the
 [packaging documentation](https://github.com/cfillion/reapack-index/wiki/Packaging-Documentation).
 
+`deploy` also uploads `index.xml` to the `index` release, so it can be downloaded from
+`https://github.com/thareeqroshan/ReaperStuff/releases/download/index/index.xml`. That link updates
+seconds after a push. `raw/master/index.xml` above still works, but GitHub caches it for up to
+5 minutes.
+
 Packages that ship several scripts use a `@metapackage` file listing them under `@provides`; see
 [Track Navigation](ReaScripts/Track%20Navigation/tRoshan_Track%20Navigation.lua). Every file
 bundled that way needs `@noindex` so it isn't also published as a standalone package.
