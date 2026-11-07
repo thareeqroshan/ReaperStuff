@@ -4,9 +4,11 @@
  * Licence: GPL v3
  * REAPER: 7.0
  * Extensions: None
- * Version: 1.0
+ * Version: 1.0.1
 --]] --[[
  * Changelog:
+ * v1.0.1 (2026-11-07)
+	+ Packaging-only update to measure update delivery; script behavior unchanged.
  * v1.0 (2026-08-26)
 	+ Initial Release
 --]]
