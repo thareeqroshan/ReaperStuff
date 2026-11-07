@@ -18,18 +18,8 @@ jobs:
           # reapack-index reads package versions out of the git history, not the worktree.
           fetch-depth: 0
 
-      # Installs the gems pinned in Gemfile.lock and caches them. Compiling rugged (libgit2)
-      # takes over a minute, so only a cache miss pays for it; -j4 builds it on all cores.
-      # bundler: default uses the Bundler that ships with Ruby (2.6.9, the version in the lock)
-      # instead of running `gem install bundler` on every run.
-      - uses: ruby/setup-ruby@v1
-        env:
-          MAKEFLAGS: -j4
-        with:
-          ruby-version: '3.4'
-          bundler: default
-          bundler-cache: true
+      - uses: ./.github/actions/setup-reapack
 
-      # --check walks the whole worktree, including the gems that setup-ruby put in vendor/bundle.
+      # --check walks the whole worktree, including the cached gems in vendor/bundle.
       - name: Validate every package
         run: bundle exec reapack-index --check --ignore vendor/bundle

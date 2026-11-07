@@ -1,0 +1,39 @@
+name: Set up reapack-index
+description: Restore locked gems without rerunning Bundler installation on cache hits.
+runs:
+  using: composite
+  steps:
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
+        bundler: default
+
+    - name: Configure Bundler and cache identity
+      id: bundle
+      shell: bash
+      run: |
+        source /etc/os-release
+        platform="$ID-$VERSION_ID-${RUNNER_ARCH,,}"
+        ruby_version=$(ruby -e 'print RUBY_VERSION')
+        lock_hash=$(sha256sum Gemfile.lock | cut -d ' ' -f 1)
+        echo "key=reapack-index-v1-$platform-ruby-$ruby_version-$lock_hash" >> "$GITHUB_OUTPUT"
+        # Reuse the existing compiled gems when migrating from setup-ruby's cache.
+        echo "legacy=setup-ruby-bundler-cache-v6-$platform-ruby-$ruby_version-wd-$GITHUB_WORKSPACE-with--without--only--Gemfile.lock-$lock_hash" >> "$GITHUB_OUTPUT"
+        {
+          echo "BUNDLE_PATH=$GITHUB_WORKSPACE/vendor/bundle"
+          echo "BUNDLE_DEPLOYMENT=true"
+        } >> "$GITHUB_ENV"
+
+    - uses: actions/cache@v4
+      id: cache
+      with:
+        path: vendor/bundle
+        key: ${{ steps.bundle.outputs.key }}
+        restore-keys: ${{ steps.bundle.outputs.legacy }}
+
+    - name: Install missing gems
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        MAKEFLAGS: -j4
+      run: bundle check || bundle install --jobs 4

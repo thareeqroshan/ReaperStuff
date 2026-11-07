@@ -138,9 +138,9 @@ To release a change: edit the script, bump `* Version:` in its header, then comm
 [packaging documentation](https://github.com/cfillion/reapack-index/wiki/Packaging-Documentation).
 
 `deploy` also uploads `index.xml` to the `index` release, so it can be downloaded from
-`https://github.com/thareeqroshan/ReaperStuff/releases/download/index/index.xml`. That link updates
-seconds after a push. `raw/master/index.xml` above still works, but GitHub caches it for up to
-5 minutes.
+`https://github.com/thareeqroshan/ReaperStuff/releases/download/index/index.xml`. The original
+`raw/master/index.xml` link still works. GitHub can temporarily serve an older copy from either
+link, so a successful deploy does not guarantee immediate visibility in ReaPack.
 
 Packages that ship several scripts use a `@metapackage` file listing them under `@provides`; see
 [Track Navigation](ReaScripts/Track%20Navigation/tRoshan_Track%20Navigation.lua). Every file
@@ -150,14 +150,16 @@ To validate locally before pushing (optional, needs Ruby):
 
 ```
 bundle install
-bundle exec reapack-index --check
+bundle exec reapack-index --check --ignore vendor/bundle
 ```
 
-The workflows install reapack-index through Bundler from `Gemfile.lock` and cache the gems, because
-building `rugged` (libgit2) from source takes over a minute. Only a cache miss pays that cost: the first run
-after the lockfile, Ruby version or runner image changes, or after GitHub evicts a cache unused for 7 days
-(`check` also runs twice a week on `master` to keep it warm). To upgrade reapack-index, run
-`bundle update reapack-index` and commit the new `Gemfile.lock`.
+Both workflows use `.github/actions/setup-reapack` to cache the gems pinned in `Gemfile.lock`.
+An exact cache hit skips Bundler installation and configures it through environment variables;
+the key includes the lockfile, Ruby version, OS version and architecture. On a miss, Bundler
+installs the missing gems, including compiling `rugged` (libgit2), which can take over a minute.
+The previous setup-ruby cache is reused when available to avoid rebuilding during migration.
+GitHub evicts caches unused for 7 days, so `check` runs twice a week on `master` to keep it warm.
+To upgrade reapack-index, run `bundle update reapack-index` and commit the new `Gemfile.lock`.
 
 Focused folder, FX, and region regressions use a small mocked REAPER API and Lua 5.4, without opening
 or changing a live REAPER project. From the repository root on Windows, run:

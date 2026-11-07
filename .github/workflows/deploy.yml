@@ -22,17 +22,7 @@ jobs:
           # reapack-index reads package versions out of the git history, not the worktree.
           fetch-depth: 0
 
-      # Installs the gems pinned in Gemfile.lock and caches them. Compiling rugged (libgit2)
-      # takes over a minute, so only a cache miss pays for it; -j4 builds it on all cores.
-      # bundler: default uses the Bundler that ships with Ruby (2.6.9, the version in the lock)
-      # instead of running `gem install bundler` on every run.
-      - uses: ruby/setup-ruby@v1
-        env:
-          MAKEFLAGS: -j4
-        with:
-          ruby-version: '3.4'
-          bundler: default
-          bundler-cache: true
+      - uses: ./.github/actions/setup-reapack
 
       - name: Regenerate the index
         run: |
@@ -44,10 +34,8 @@ jobs:
       - name: Push the updated index
         run: git push
 
-      # raw.githubusercontent.com caches index.xml for 5 minutes and ignores ReaPack's no-cache
-      # request, so syncing right after a push can return the old index. Release downloads are
-      # not cached that way: every upload gets a fresh download URL. This keeps a copy of the
-      # committed index at https://github.com/thareeqroshan/ReaperStuff/releases/download/index/index.xml
+      # Keep the stable release link updated alongside the original raw link.
+      # GitHub can still serve an older download briefly after a successful upload.
       - name: Publish index.xml as a release download
         env:
           GH_TOKEN: ${{ github.token }}
