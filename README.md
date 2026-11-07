@@ -155,9 +155,9 @@ bundle exec reapack-index --check --ignore vendor/bundle
 
 Both workflows use `.github/actions/setup-reapack` to cache the gems pinned in `Gemfile.lock`.
 An exact cache hit skips Bundler installation and configures it through environment variables;
-the key includes the lockfile, Ruby version, OS version and architecture. On a miss, Bundler
-installs the missing gems, including compiling `rugged` (libgit2), which can take over a minute.
-The previous setup-ruby cache is reused when available to avoid rebuilding during migration.
+the key includes the lockfile, Ruby version, OS version and architecture. When only the lockfile
+changes, compatible cached gems are reused and Bundler installs missing versions and removes
+unused ones. With no compatible cache, compiling `rugged` (libgit2) can take over a minute.
 GitHub evicts caches unused for 7 days, so `check` runs twice a week on `master` to keep it warm.
 To upgrade reapack-index, run `bundle update reapack-index` and commit the new `Gemfile.lock`.
 
